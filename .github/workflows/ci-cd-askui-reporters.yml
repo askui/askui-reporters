@@ -37,9 +37,8 @@ jobs:
       - name: Test 
         run: npm run test
       - name: Build
-        if: github.ref != 'refs/heads/main'
+        # if: github.ref != 'refs/heads/main'
         run: npm run build
-        working-directory: reporters
   release:
     name: Release reporters Node.js package
     if: github.event_name == 'workflow_dispatch'

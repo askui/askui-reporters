@@ -1,4 +1,4 @@
-name: CI/CD Pipeline of the askui Node.js Package
+name: CI/CD Pipeline of the askui-reporters Package
 defaults:
   run:
     working-directory: reporters

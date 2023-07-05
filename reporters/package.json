@@ -6,8 +6,8 @@
   "module": "./dist/esm/main.js",
   "scripts": {
     "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\"",
+    "lint": "echo \"Error: no test specified\""
   },
   "repository": {
     "type": "git",

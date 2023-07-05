@@ -1,4 +1,7 @@
 name: CI/CD Pipeline of the askui Node.js Package
+defaults:
+  run:
+    working-directory: reporters
 on:
   push:
     paths:
@@ -36,7 +39,7 @@ jobs:
       - name: Build
         if: github.ref != 'refs/heads/main' && github.event_name != 'workflow_dispatch'
         run: npm run build
-        working-directory: packages/askui-nodejs
+        working-directory: reporters
   release:
     name: Release reporters Node.js package
     if: github.event_name == 'workflow_dispatch'

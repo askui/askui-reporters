@@ -1,0 +1,42 @@
+{
+  "name": "askui-reporters",
+  "version": "1.0.0",
+  "description": "Exports all the AskUI reporters you can use to create reports for your AskUI runs.",
+  "main": "./dist/cjs/main.js",
+  "module": "./dist/esm/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/askui/askui-reporters.git"
+  },
+  "keywords": [
+    "askui"
+  ],
+  "author": "askui GmbH <info@askui.com> (http://www.askui.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/askui/askui-reporters/issues"
+  },
+  "homepage": "https://github.com/askui/askui-reporters#readme",
+  "files": [
+    "dist/cjs/",
+    "dist/esm/"
+  ],
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.21",
+    "@types/jest": "^29.5.2",
+    "@types/jsdom": "^21.1.1",
+    "@types/node": "20.3.3",
+    "askui": "0.10.5",
+    "fluent-ffmpeg": "^2.1.2",
+    "jest": "^29.5.0",
+    "jest-html-reporters": "^3.1.4",
+    "sharp": "^0.32.1",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}

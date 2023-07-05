@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "target": "ES2015",
+    "module": "ES2020",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist/esm",
+    "declaration": true,
+    "types": [
+      "node"
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/core/reporting": ["node_modules/askui/dist/cjs/core/reporting"],
+      "@/core/model/custom-element": ["node_modules/askui/dist/cjs/core/model/custom-element"],
+    }
+  },
+  "include": [
+    "./src"
+  ], 
+  "exclude": [
+    "./test",
+    "src/**/*.spec.ts"
+  ]
+}

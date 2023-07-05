@@ -1,0 +1,75 @@
+name: CI/CD Pipeline of the askui Node.js Package
+on:
+  push:
+    paths:
+      - 'reporters/**'
+  # Currently, we only support releasing manually from main as we have not yet decided on how to deal with the protected branch issue (https://github.community/t/allowing-github-actions-bot-to-push-to-protected-branch/16536/16)
+  # workflow_dispatch:
+  #   inputs:
+  #     prerelease:
+  #       default: false
+  #       type: boolean
+  #     release-it-options:
+  #       required: false
+  #       type: string
+env:
+  NODE_VERSION: 16
+  RELEASE_COMMAND: ${{ github.event.inputs.prerelease == 'true' &&  'release:prerelease' || 'release' }} -- ${{ github.event.inputs.release-it-options }}
+jobs:
+  build:
+    name: Build reporters Node.js package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install 
+        run: npm ci
+      - name: Lint 
+        run: npm run lint
+      - name: Test 
+        run: npm run test
+      - name: Build
+        if: github.ref != 'refs/heads/main' && github.event_name != 'workflow_dispatch'
+        run: npm run build
+        working-directory: packages/askui-nodejs
+  release:
+    name: Release reporters Node.js package
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+    permissions: 
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install 
+        run: npm ci
+      - name: Configure Git User
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Release
+        run: npm run ${{ env.RELEASE_COMMAND }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
+  repository_dispatch_nodejs_released:
+    name: Repository Dispatch askui Node.js Package Released
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch askui Node.js Package Released
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: askui_nodejs_package_released

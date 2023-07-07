@@ -23,9 +23,7 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@/core/reporting": ["node_modules/askui/dist/cjs/core/reporting"],
-      "@/core/model/custom-element": ["node_modules/askui/dist/cjs/core/model/custom-element"],
+      "@/*": ["src/*"]
     }
   },
   "include": [

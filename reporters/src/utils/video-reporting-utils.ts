@@ -1,6 +1,12 @@
 import ffmpeg from "fluent-ffmpeg";
 import {Readable} from "stream";
 
+export function convertBase64StringToBuffer(
+  base64String: string
+): Buffer {
+  return Buffer.from(base64String, "base64");
+}
+
 export function convertBase64StringToReadStream(
   base64String: string
 ): Readable {

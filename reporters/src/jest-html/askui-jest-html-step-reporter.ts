@@ -1,13 +1,25 @@
-import { Step, Reporter } from "askui";
+import fs from "fs";
+import { Step, Reporter, ReporterConfig } from "askui";
+import {convertPngDataUrlToBuffer} from "../utils/image-reporting-utils"
 const { addAttach, addMsg } = require("jest-html-reporters/helper");
+import { convertBase64StringToReadStream, writeWebmToMp4 } from '../utils/video-reporting-utils';
 
-function convertPngDataUrlToBuffer(pngDataUrl: string): Buffer {
-  const base64Data = pngDataUrl.replace(/^data:image\/png;base64,/, "");
-  const buffer = Buffer.from(base64Data, "base64");
-  return buffer;
-}
+export class AskUIJestHtmlStepReporter implements Reporter {
 
-export class askuiJestHtmlStepReporter implements Reporter {
+  config: ReporterConfig = {
+    withScreenshots: 'always',
+    withDetectedElements: 'always'
+  };
+
+  constructor(config?: ReporterConfig) {
+    if (config?.withScreenshots) {
+      this.config.withScreenshots = config.withScreenshots; 
+    }
+    if (config?.withDetectedElements) {
+      this.config.withDetectedElements = config.withDetectedElements; 
+    }
+  }
+
   async onStepBegin(step: Step): Promise<void> {
     await addMsg({ message: `Begin running "${step.instruction.valueHumanReadable}"` });
     await addMsg({ message: JSON.stringify(step) });
@@ -48,5 +60,15 @@ export class askuiJestHtmlStepReporter implements Reporter {
     if (step.end?.detectedElements) {
       await addMsg({ message: `Detected elements: ${JSON.stringify(step.end.detectedElements)}` });
     }
+  }
+
+  static async writeVideoAttachment(video: string, output: string) {
+    await writeWebmToMp4(convertBase64StringToReadStream(video), output);
+    addAttach({
+      attach: fs.readFileSync(output),
+      description: "Video",
+      bufferFormat: "mp4",
+    });
+    await fs.promises.unlink(output);
   }
 }

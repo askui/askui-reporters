@@ -1,6 +1,11 @@
 # 📊 askui-reporters
 A `npm`-package containg a collection of reporters for AskUI. If existent we also provide a link to an example repository where you can inspect the code in action.
 
+## 🏗️ Example Repositories
+
+* [allure-reporter](https://github.com/askui/askui-example-allure-reporter)
+* [jest-html-reporter](https://github.com/askui/askui-example-jest-html-reporters)
+
 ### 📇 Contributing
 If you have implemented your own reporter and want it to be referenced here. Please open a pull request 🦄
 

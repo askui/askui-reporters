@@ -16,12 +16,6 @@ Detailed examples on how to use the reporters are provided in this README.
 
 __IMPORTANT NOTE: Due to restrictions in jest-html-reporter you can either have screenshots or video with this reporter. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
 
-Install the following dependencies:
-
-```bash
-npm install --save-dev jest-html-reporters
-```
-
 #### Enable Reporter in `jest.setup.ts`
 Add the reporter to the `UiControlClient` in `jest.setup.ts`:
 
@@ -105,11 +99,6 @@ export default config;
 ```
 
 ### Allure Reporter
-Install the following dependencies:
-
-```bash
-npm install --save-dev jest-allure-circus
-```
 
 #### Enable Reporter in `jest.setup.ts`
 Add the reporter to the `UiControlClient` in `jest.setup.ts`:

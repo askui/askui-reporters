@@ -16,7 +16,7 @@
         "releaseName": "v${version}"
     },
     "npm": {
-        "publishPath": "./reporters",
+        "publishPath": "./",
         "skipChecks": true
     },
     "plugins": {
@@ -29,11 +29,11 @@
         "@release-it-plugins/workspaces": {
             "skipChecks": true,
             "workspaces": [
-                "reporters"
+                "./"
             ],
             "additionalManifests": {
                 "versionUpdates": [
-                    "reporters/package.json"
+                    "package.json"
                 ]
             }
         }

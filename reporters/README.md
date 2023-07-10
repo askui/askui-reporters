@@ -3,10 +3,10 @@
 Collections of all reporters you can use out of the box in your AskUI executions.
 
 ## 💾 Installation
-Install `askui-reporters as dev-dependency:
+Install `@askui/askui-reporters` as dev-dependency:
 
 ```bash
-npm install --save-dev askui-reporters
+npm install --save-dev @askui/askui-reporters
 ```
 
 ## 🔌 Usage
@@ -27,7 +27,7 @@ Add the reporter to the `UiControlClient` in `jest.setup.ts`:
 
 ```typescript
 // Do not forget this import at the start of the file!
-import { AskUIJestHtmlStepReporter } from "askui-reporters";
+import { AskUIJestHtmlStepReporter } from "@askui/askui-reporters";
 ...
   aui = await UiControlClient.build({
     reporter: new AskUIJestHtmlStepReporter({
@@ -68,7 +68,7 @@ Where `SnapshotDetailLevel` is by default `onFailure` but can be configured with
 ```typescript
 // Do not forget these imports at the start of the file
 import path from "path";
-import { AskUIJestHtmlStepReporter } from "askui-reporters";
+import { AskUIJestHtmlStepReporter } from "@askui/askui-reporters";
 
 beforeEach(async () => {
   await aui.startVideoRecording();
@@ -116,7 +116,7 @@ Add the reporter to the `UiControlClient` in `jest.setup.ts`:
 
 ```typescript
 // Do not forget this import at the start of the file
-import { AskUIAllureStepReporter } from "askui-reporters";
+import { AskUIAllureStepReporter } from "@askui/askui-reporters";
 ...
   aui = await UiControlClient.build({
     reporter: new AskUIAllureStepReporter({

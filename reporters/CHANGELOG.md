@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.3](https://github.com/askui/askui-reporters/compare/1.0.2...1.0.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* include necessary dependencies in dependencies property in package.json ([5fbc164](https://github.com/askui/askui-reporters/commit/5fbc16446c256aa22a5d20c363544f1e5ee87e12))
+
 ### [1.0.2](https://github.com/askui/askui-reporters/compare/1.0.1...1.0.2) (2023-07-10)
 
 ### [1.0.1](https://github.com/askui/askui-reporters/compare/1.1.0...1.0.1) (2023-07-10)

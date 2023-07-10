@@ -77,4 +77,14 @@ export default config;
 ```
 
 ## 🧱 Build New Release
-🚧 **Under construction** 🚧
+
+```
+cd reporters
+
+npm config set scope askui
+npm config set access public
+
+npm login
+
+npm run release
+```

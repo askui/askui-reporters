@@ -1,7 +1,7 @@
 {
     "hooks": {
         "after:bump": [
-            "npm install; npm run build -w reporters;"
+            "npm install; npm run build -w ./;"
         ]
     },
     "git": {

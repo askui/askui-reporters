@@ -5,18 +5,11 @@ const { addAttach, addMsg } = require("jest-html-reporters/helper");
 import { convertBase64StringToReadStream, writeWebmToMp4 } from '../utils/video-reporting-utils';
 
 export class AskUIJestHtmlStepReporter implements Reporter {
-
-  config: ReporterConfig = {
-    withScreenshots: 'always',
-    withDetectedElements: 'always'
-  };
+  config?: ReporterConfig;
 
   constructor(config?: ReporterConfig) {
-    if (config?.withScreenshots) {
-      this.config.withScreenshots = config.withScreenshots; 
-    }
-    if (config?.withDetectedElements) {
-      this.config.withDetectedElements = config.withDetectedElements; 
+    if (config !== undefined) {
+      this.config = config;
     }
   }
 

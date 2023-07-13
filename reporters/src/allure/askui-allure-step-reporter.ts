@@ -44,10 +44,13 @@ function createScreenshotAttachment(
 }
 
 export class AskUIAllureStepReporter implements Reporter {
-  config: ReporterConfig = {
-    withScreenshots: 'onFailure',
-    withDetectedElements: 'onFailure',
-  };
+  config?: ReporterConfig;
+
+  constructor(config?: ReporterConfig) {
+    if (config !== undefined) {
+      this.config = config;
+    }
+  }
 
   async onStepEnd(step: Step): Promise<void> {
     const status = mapAskuiToAllureStepStatus(step.status);

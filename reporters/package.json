@@ -15,7 +15,17 @@
     "url": "git+https://github.com/askui/askui-reporters.git"
   },
   "keywords": [
-    "askui"
+    "askui",
+    "reporters",
+    "jest",
+    "test",
+    "jest-reporter",
+    "jest-html-reporters",
+    "allure",
+    "allure-js",
+    "allure-reporter",
+    "jest-allure-circus",
+    "video-reporting"
   ],
   "author": "askui GmbH <info@askui.com> (http://www.askui.com/)",
   "license": "MIT",

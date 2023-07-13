@@ -3,7 +3,7 @@
 Collections of all reporters you can use out of the box in your AskUI executions.
 
 ## 💾 Installation
-Install `@askui/askui-reporters` as dev-dependency:
+Install `@askui/askui-reporters` as a dev-dependency:
 
 ```bash
 npm install --save-dev @askui/askui-reporters
@@ -12,9 +12,9 @@ npm install --save-dev @askui/askui-reporters
 ## 🔌 Usage
 Detailed examples on how to use the reporters are provided in this README.
 
-### Jest-Html-Reporter
+### Jest-Html-Reporters
 
-__IMPORTANT NOTE: Due to restrictions in jest-html-reporter you can either have screenshots or video with this reporter. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
+__IMPORTANT NOTE__: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
 
 #### Enable Reporter in `jest.setup.ts`
 Add the reporter to the `UiControlClient` in `jest.setup.ts`:
@@ -32,30 +32,30 @@ import { AskUIJestHtmlStepReporter } from "@askui/askui-reporters";
 ...
 ```
 
-The configuration values `withScreenshots` and `withDetectedElements` are defined as follows:
+You can pass a `ReporterConfig` object to the reporter to configure the level of detail for screenshots and detected elements. The default values are `'onFailure'` for both:
 
 ```typescript
 /**
- * default: onFailure; makes step run slower
- * Possible Values: required, onFailure, begin, always
+ * SnapshotDetailLevel represents various levels of detail for the snapshot.
+ * There are four possible values for this type.
+ *
+ * @typedef {'required'|'onFailure'|'begin'|'always'} SnapshotDetailLevel
+ *
+ * @property {'required'} required - Snapshot details, like screenshots or detected elements, may be available if required by the step. However, their presence is not guaranteed.
+ * @property {'onFailure'} onFailure - Snapshot details are available when the step fails, primarily for debugging purposes. This level includes everything provided by 'required'.
+ * @property {'begin'} begin - Snapshot details are available when the command starts, useful for determining why certain elements were interacted with. This level includes everything provided by 'onFailure'.
+ * @property {'always'} always - Snapshot details are consistently available, irrespective of whether a step has failed or not, aiding in debugging. 
  */
-withScreenshots?: SnapshotDetailLevel;
 
 /**
- * overrides withScreenshot if higher level of detail as screenshot
- *  is required for detecting elements;
- * incurres additional cost; default: onFailure; makes step run slower
- * Possible Values: required, onFailure, begin, always
+ * The ReporterConfig interface encapsulates the configuration options for the reporter.
+ *
+ * @interface ReporterConfig
+ *
+ * @property {SnapshotDetailLevel} [withScreenshots='onFailure'] - Defines the detail level for screenshots. Acceptable values: 'required', 'onFailure', 'begin', 'always'. Note: Higher levels of detail may impede step execution speed.
+ * @property {SnapshotDetailLevel} [withDetectedElements='onFailure'] - Defines the detail level for detecting elements. Acceptable values: 'required', 'onFailure', 'begin', 'always'. Note: Higher levels of detail may impede step execution speed and incur additional costs.
  */
-withDetectedElements?: SnapshotDetailLevel;
 ```
-
-Where `SnapshotDetailLevel` is by default `onFailure` but can be configured with the following:
-
-* `'required'`: Details of snapshot, e.g., screenshot or detected elements, may or may not be available depending on if they are required by the step. There are not guarantees made.
-* `'onFailure'`: Details are available when the step fails, e.g., for debugging. Includes everything of required.
-* `'begin'`: Details are available also when the command is started, e.g., for detecting why a certain element was interacted with. Includes everything of onFailure.
-* `'always'`: Details are available always, e.g., before and after a step has been run no matter if it failed or not for debugging.
 
 #### Configure `beforeEach()` and `afterEach()` in `jest.setup.ts`
 
@@ -116,30 +116,30 @@ import { AskUIAllureStepReporter } from "@askui/askui-reporters";
 ...
 ```
 
-The configuration values `withScreenshots` and `withDetectedElements` are defined as follows:
+You can pass a `ReporterConfig` object to the reporter to configure the level of detail for screenshots and detected elements. The default values are `'onFailure'` for both:
 
 ```typescript
 /**
- * default: onFailure; makes step run slower
- * Possible Values: required, onFailure, begin, always
+ * SnapshotDetailLevel represents various levels of detail for the snapshot.
+ * There are four possible values for this type.
+ *
+ * @typedef {'required'|'onFailure'|'begin'|'always'} SnapshotDetailLevel
+ *
+ * @property {'required'} required - Snapshot details, like screenshots or detected elements, may be available if required by the step. However, their presence is not guaranteed.
+ * @property {'onFailure'} onFailure - Snapshot details are available when the step fails, primarily for debugging purposes. This level includes everything provided by 'required'.
+ * @property {'begin'} begin - Snapshot details are available when the command starts, useful for determining why certain elements were interacted with. This level includes everything provided by 'onFailure'.
+ * @property {'always'} always - Snapshot details are consistently available, irrespective of whether a step has failed or not, aiding in debugging. 
  */
-withScreenshots?: SnapshotDetailLevel;
 
 /**
- * overrides withScreenshot if higher level of detail as screenshot
- *  is required for detecting elements;
- * incurres additional cost; default: onFailure; makes step run slower
- * Possible Values: required, onFailure, begin, always
+ * The ReporterConfig interface encapsulates the configuration options for the reporter.
+ *
+ * @interface ReporterConfig
+ *
+ * @property {SnapshotDetailLevel} [withScreenshots='onFailure'] - Defines the detail level for screenshots. Acceptable values: 'required', 'onFailure', 'begin', 'always'. Note: Higher levels of detail may impede step execution speed.
+ * @property {SnapshotDetailLevel} [withDetectedElements='onFailure'] - Defines the detail level for detecting elements. Acceptable values: 'required', 'onFailure', 'begin', 'always'. Note: Higher levels of detail may impede step execution speed and incur additional costs.
  */
-withDetectedElements?: SnapshotDetailLevel;
 ```
-
-Where `SnapshotDetailLevel` is by default `onFailure` but can be configured with the following:
-
-* `'required'`: Details of snapshot, e.g., screenshot or detected elements, may or may not be available depending on if they are required by the step. There are not guarantees made.
-* `'onFailure'`: Details are available when the step fails, e.g., for debugging. Includes everything of required.
-* `'begin'`: Details are available also when the command is started, e.g., for detecting why a certain element was interacted with. Includes everything of onFailure.
-* `'always'`: Details are available always, e.g., before and after a step has been run no matter if it failed or not for debugging.
 
 #### Configure `beforeEach()` and `afterEach()` in `jest.setup.ts`
 The `UiControlClient` retrieves the videos and images from your `UiController`. You have to implement `beforeEach()` and `afterEach()` in `jest.setup.ts` to start the recording and then add it to your report:
@@ -181,4 +181,4 @@ export default config;
 ## 🏗️ Example Repositories
 
 * [allure-reporter](https://github.com/askui/askui-example-allure-reporter)
-* [jest-html-reporter](https://github.com/askui/askui-example-jest-html-reporters)
+* [jest-html-reporters](https://github.com/askui/askui-example-jest-html-reporters)

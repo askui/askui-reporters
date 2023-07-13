@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/askui/askui-reporters/compare/1.0.4...1.2.0) (2023-07-13)
+
+
+### Features
+
+* make video reporting api consistent ([d1e8314](https://github.com/askui/askui-reporters/commit/d1e831431a89cb8c1bfe2c5664a68b2fbfeaf423))
+
+
+### Bug Fixes
+
+* passing reporter config to reporters ([edbea0b](https://github.com/askui/askui-reporters/commit/edbea0bc4a9c42c9bdadbb0e8806d809117695d1))
+
 ### [1.0.4](https://github.com/askui/askui-reporters/compare/1.0.3...1.0.4) (2023-07-10)
 
 ### [1.0.3](https://github.com/askui/askui-reporters/compare/1.0.2...1.0.3) (2023-07-10)

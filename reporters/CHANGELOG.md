@@ -18,7 +18,7 @@
 
 ### Features
 
-* Add jest-html-reporter implementation ([36344e6](https://github.com/askui/askui-reporters/commit/36344e6004aafb79faff0d495dc85cf4da0bbef9))
+* Add jest-html-reporters implementation ([36344e6](https://github.com/askui/askui-reporters/commit/36344e6004aafb79faff0d495dc85cf4da0bbef9))
 * Review ready version askui-reporters npm package ([d48f2e5](https://github.com/askui/askui-reporters/commit/d48f2e5cd2d654c1530c134d38fda9313f271e3e))
 * Review ready version askui-reporters npm package ([cc1d857](https://github.com/askui/askui-reporters/commit/cc1d8573b366d6d0288068953523e2ca375dee6d))
 

@@ -3,20 +3,14 @@ import { Step, Reporter, ReporterConfig } from "askui";
 import {convertPngDataUrlToBuffer} from "../utils/image-reporting-utils"
 const { addAttach, addMsg } = require("jest-html-reporters/helper");
 import { convertBase64StringToReadStream, writeWebmToMp4 } from '../utils/video-reporting-utils';
+import path from "path";
 
 export class AskUIJestHtmlStepReporter implements Reporter {
-
-  config: ReporterConfig = {
-    withScreenshots: 'always',
-    withDetectedElements: 'always'
-  };
+  config?: ReporterConfig;
 
   constructor(config?: ReporterConfig) {
-    if (config?.withScreenshots) {
-      this.config.withScreenshots = config.withScreenshots; 
-    }
-    if (config?.withDetectedElements) {
-      this.config.withDetectedElements = config.withDetectedElements; 
+    if (config !== undefined) {
+      this.config = config;
     }
   }
 
@@ -62,8 +56,9 @@ export class AskUIJestHtmlStepReporter implements Reporter {
     }
   }
 
-  static async writeVideoAttachment(video: string, output: string) {
-    await writeWebmToMp4(convertBase64StringToReadStream(video), output);
+  static async attachVideo(webm: string) {
+    const output = path.join(__dirname, "./video.mp4")
+    await writeWebmToMp4(convertBase64StringToReadStream(webm), output);
     addAttach({
       attach: fs.readFileSync(output),
       description: "Video",

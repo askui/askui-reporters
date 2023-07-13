@@ -44,10 +44,13 @@ function createScreenshotAttachment(
 }
 
 export class AskUIAllureStepReporter implements Reporter {
-  config: ReporterConfig = {
-    withScreenshots: 'onFailure',
-    withDetectedElements: 'onFailure',
-  };
+  config?: ReporterConfig;
+
+  constructor(config?: ReporterConfig) {
+    if (config !== undefined) {
+      this.config = config;
+    }
+  }
 
   async onStepEnd(step: Step): Promise<void> {
     const status = mapAskuiToAllureStepStatus(step.status);
@@ -79,10 +82,10 @@ export class AskUIAllureStepReporter implements Reporter {
     }
   }
 
-  static createAllureAttachment(video: string) {
+  static attachVideo(webm: string) {
     allure.createAttachment(
       "Video",
-      convertBase64StringToBuffer(video),
+      convertBase64StringToBuffer(webm),
       ContentType.WEBM
     );
   }

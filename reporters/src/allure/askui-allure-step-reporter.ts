@@ -82,10 +82,10 @@ export class AskUIAllureStepReporter implements Reporter {
     }
   }
 
-  static createAllureAttachment(video: string) {
+  static attachVideo(webm: string) {
     allure.createAttachment(
       "Video",
-      convertBase64StringToBuffer(video),
+      convertBase64StringToBuffer(webm),
       ContentType.WEBM
     );
   }

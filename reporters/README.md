@@ -71,8 +71,7 @@ beforeEach(async () => {
 afterEach(async () => {
   await aui.stopVideoRecording();
   const video = await aui.readVideoRecording();
-  const output = path.join(__dirname, "./video.mp4");
-  await AskUIJestHtmlStepReporter.writeVideoAttachment(video, output);
+  await AskUIJestHtmlStepReporter.attachVideo(video);
 });
 ```
 
@@ -156,7 +155,7 @@ beforeEach(async () => {
 afterEach(async () => {
   await aui.stopVideoRecording();
   const video = await aui.readVideoRecording();
-  AskUIAllureStepReporter.createAllureAttachment(video);
+  AskUIAllureStepReporter.attachVideo(video);
 });
 ```
 

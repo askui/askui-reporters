@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.2.1](https://github.com/askui/askui-reporters/compare/1.2.0...1.2.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* **allure:** rm quickfix for reporting on failed test status ([5d43513](https://github.com/askui/askui-reporters/commit/5d43513444d3c6cfe95b07f36be3becb4e99da38))
+
 ## [1.2.0](https://github.com/askui/askui-reporters/compare/1.0.4...1.2.0) (2023-07-13)
 
 

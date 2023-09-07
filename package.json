@@ -5,6 +5,7 @@
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "test": "echo \"Error: no test specified\"",
     "lint": "echo \"Error: no test specified\"",

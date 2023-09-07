@@ -1,5 +1,5 @@
 import { Reporter, Step, StepStatus, Annotation, DetectedElement, ReporterConfig } from "askui";
-import { Status } from "jest-allure-circus";
+import { Status } from "@askui/jest-allure-circus";
 import { ContentType } from "allure-js-commons";
 import { convertPngDataUrlToBuffer } from "../utils/image-reporting-utils";
 import { convertBase64StringToBuffer } from "../utils/video-reporting-utils";

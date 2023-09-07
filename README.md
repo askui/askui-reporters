@@ -150,9 +150,6 @@ The `UiControlClient` retrieves the videos and images from your `UiController`. 
 
 1. Allure Reporter
 ```typescript
-// Do not forget this import at the start of the file
-import "jest-allure-circus";
-
 beforeEach(async () => {
   await aui.startVideoRecording();
 });
@@ -164,7 +161,7 @@ afterEach(async () => {
 });
 ```
 
-#### Enable the TestEnvironment `jest-allure-circus` in `jest.config.ts`
+#### Enable the TestEnvironment `@askui/jest-allure-circus` in `jest.config.ts`
 
 ```typescript
 import type { Config } from '@jest/types';
@@ -175,7 +172,7 @@ const config: Config.InitialOptions = {
   sandboxInjectedGlobals: [
     'Math',
   ],
-  testEnvironment: 'jest-allure-circus',
+  testEnvironment: '@askui/jest-allure-circus',
 };
 
 // eslint-disable-next-line import/no-default-export

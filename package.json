@@ -38,9 +38,9 @@
     "dist/esm/"
   ],
   "dependencies": {
+    "@askui/jest-allure-circus": "^1.0.22",
     "@types/fluent-ffmpeg": "2.1.21",
     "fluent-ffmpeg": "2.1.2",
-    "jest-allure-circus": "github:askui/jest-allure-circus#c08e010",
     "jest-html-reporters": "3.1.4"
   },
   "devDependencies": {

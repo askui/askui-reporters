@@ -1,5 +1,9 @@
 # Changelog
 
+### [1.2.2](https://github.com/askui/askui-reporters/compare/1.2.1...1.2.2) (2023-09-07)
+
+* use fork of jest-allure-circus (@askui/jest-allure-circus) to fix allure reporting
+
 ### [1.2.1](https://github.com/askui/askui-reporters/compare/1.2.0...1.2.1) (2023-09-05)
 
 

@@ -100,6 +100,8 @@ export default config;
 
 **IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
 
+**IMPORTANT NOTE 2**: To use this reporter you have to have [ffmpeg](http://www.ffmpeg.org/) installed on your system (including all necessary encoding libraries like libmp3lame or libx264).
+
 #### Enable Reporter in `jest.setup.ts`
 
 Add the reporter to the `UiControlClient` in `jest.setup.ts`:

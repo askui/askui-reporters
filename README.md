@@ -21,6 +21,8 @@ Detailed examples on how to use the reporters are provided in this README.
 
 ### Allure Reporter
 
+> ❗️ Do **NOT** configure multiple reporters as this will break your project in unexpected ways! 
+
 #### Enable Reporter in `jest.setup.ts`
 
 Add the reporter to the `UiControlClient` in `jest.setup.ts`:
@@ -98,13 +100,14 @@ export default config;
 
 ### Jest-Html-Reporters
 
-{% note %}
+> ❗️ Do **NOT** configure multiple reporters as this will break your project in unexpected ways!
 
-**IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
+> ❗️ **IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
 
-{% endnote %}
+#### Install `ffmpeg` On Your System
+To use this reporter you have to have [ffmpeg](http://www.ffmpeg.org/) installed on your system (including all necessary encoding libraries like `libmp3lame` or `libx264`).
 
-**IMPORTANT NOTE 2**: To use this reporter you have to have [ffmpeg](http://www.ffmpeg.org/) installed on your system (including all necessary encoding libraries like libmp3lame or libx264).
+Please follow the [installation instructions](http://www.ffmpeg.org/download.html) for your system.
 
 #### Enable Reporter in `jest.setup.ts`
 

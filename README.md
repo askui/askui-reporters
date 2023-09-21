@@ -185,6 +185,34 @@ const config: Config.InitialOptions = {
 export default config;
 ```
 
+### AnnotationReporter
+
+> ❗️ Do **NOT** configure multiple reporters as this will break your project in unexpected ways!
+
+#### Enable and Configure the AnnotationReporter in `jest.config.ts`
+Add the reporter to the `UiControlClient` in `jest.setup.ts`:
+
+```typescript
+import { AskUIAnnotationStepReporter, AnnotationLevel } from '@askui/askui-reporters';
+...
+  aui = await UiControlClient.build({
+    ...
+    reporter: new AskUIAnnotationStepReporter(
+      {
+        annotationLevel: AnnotationLevel.ON_FAILURE,
+        // folderPath: "report", /* Uncomment and change property for different folder */
+        // fileNameTemplate: "_testStep_annotation" /* Uncomment and change property for different fileNameTemplate */
+      }),
+  });
+...
+```
+
+`AnnotationLevel` is implemented as an enum. You have three options: `DISABLED, `ON_FAILURE`, `ALL`.
+
+* `ALL`: Runs the annotate command after the execution of each step.
+* `ON_FAILURE`: Runs the annotate command if the step fails
+* `DISABLED`: Never runs the annotate command after steps
+
 ## 📝 Implement Your Own Reporter
 
 To write your own reporter you have to implement AskUI's `Reporter` interface.

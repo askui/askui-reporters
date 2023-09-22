@@ -4,72 +4,70 @@ import path from "path";
 import { JSDOM } from 'jsdom';
 
 export enum AnnotationLevel {
-  DISABLED = 'disabled',
   ON_FAILURE = 'onFailure',
   ALL = 'all',
 }
 
-export interface AnnotationReporterConfig extends ReporterConfig {
-  annotationLevel: AnnotationLevel;
-  folderPath: string;
-  fileNameTemplate: string;
-}
 
 export class AskUIAnnotationStepReporter implements Reporter {
 
-  reporterConfig: AnnotationReporterConfig = {
-    annotationLevel: AnnotationLevel.DISABLED,
-    folderPath: 'report',
-    fileNameTemplate: '_testStep_annotation',
-  }
+  annotationLevel? = AnnotationLevel.ON_FAILURE;
+  folderPath? = 'report';
+  fileNameSuffix? = '_testStep_annotation';
 
   config: ReporterConfig = {
-    withScreenshots: 'always',
-    withDetectedElements: 'always',
+    withScreenshots: 'onFailure',
+    withDetectedElements: 'onFailure',
   }
 
-  constructor(reporterConfig: AnnotationReporterConfig) {
-    if (reporterConfig.annotationLevel !== undefined) {
-      this.reporterConfig.annotationLevel = reporterConfig.annotationLevel;
+  constructor(annotationLevel?: AnnotationLevel, folderPath?: string, fileNameSuffix?: string) {
+    if (annotationLevel !== undefined) {
+      this.annotationLevel = annotationLevel;
+
+      if (this.annotationLevel === AnnotationLevel.ALL) {
+        this.config.withScreenshots = 'always';
+        this.config.withDetectedElements = 'always';
+      }
     }
-    if (reporterConfig.fileNameTemplate !== undefined) {
-      this.reporterConfig.fileNameTemplate = reporterConfig.fileNameTemplate;
+    if (folderPath !== undefined) {
+      this.folderPath = folderPath;
     }
-    if (reporterConfig.folderPath !== undefined) {
-      this.reporterConfig.folderPath = reporterConfig.folderPath;
-    }
-    if (reporterConfig.withScreenshots !== undefined) {
-      this.config.withScreenshots = reporterConfig.withScreenshots;
-    }
-    if (reporterConfig.withDetectedElements !== undefined) {
-      this.config.withDetectedElements = reporterConfig.withDetectedElements;
+    if (fileNameSuffix !== undefined) {
+      this.fileNameSuffix = fileNameSuffix;
     }
   }
 
   async onStepEnd(step: Step): Promise<void> {
-    if (( 
-          (this.reporterConfig.annotationLevel === AnnotationLevel.ON_FAILURE && step.status !== 'passed') ||
-          this.reporterConfig.annotationLevel === AnnotationLevel.ALL
-        ) &&
-        step.lastRun?.end?.screenshot !== undefined &&
-        step.lastRun?.end?.detectedElements !== undefined) {
-      const annotation = new Annotation(
-        step.lastRun?.end?.screenshot,
-        step.lastRun?.end?.detectedElements
-      )
 
-      const fileNamePrefix = `${step.status !== 'passed' ? 'failed' : step.status}${this.reporterConfig.fileNameTemplate}`
-      await AskUIAnnotationStepReporter.writeAnnotation(
-        annotation.toHtml(),
-        this.reporterConfig.folderPath,
-        fileNamePrefix);
+    if (step.status === 'running' || step.status === 'pending' || step.status === 'erroneous') {
+      throw Error(`Step status must not be '{step.status}' this indicates an error in the execution.`);
     }
+
+    if (this.annotationLevel === AnnotationLevel.ON_FAILURE && step.status === 'passed') {
+      return;
+    }
+
+    if (step.lastRun?.end?.screenshot === undefined ||
+        step.lastRun?.end?.detectedElements === undefined) {
+      throw Error("'screenshot' or 'detectedElements' not defined");
+    }
+
+    const annotation = new Annotation(
+      step.lastRun.end.screenshot,
+      step.lastRun.end.detectedElements
+    )
+
+    const suffix = `${step.status}${this.fileNameSuffix}`
+    await AskUIAnnotationStepReporter.writeAnnotation(
+      annotation.toHtml(),
+      this.folderPath,
+      suffix);
   }
 
-  static async writeAnnotation(html: JSDOM, outputFolder = 'report', fileNamePrefix = 'annotation') {
+  static async writeAnnotation(html: JSDOM, outputFolder = 'report', fileNameSuffix = 'annotation') {
     const currentDateTime = new Date();
     const currentTimeStringOnlyNumbers = currentDateTime.toISOString().replace(/\D/g, '');
-    const fileName = `${currentTimeStringOnlyNumbers}_${fileNamePrefix}.html`;
+    const fileName = `${currentTimeStringOnlyNumbers}_${fileNameSuffix}.html`;
     const outputFilePath = path.join(outputFolder, fileName);
     if (!(fs.existsSync(outputFolder))) {
       fs.mkdirSync(outputFolder, { recursive: true });

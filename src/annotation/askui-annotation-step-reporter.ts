@@ -8,7 +8,6 @@ export enum AnnotationLevel {
   ALL = 'all',
 }
 
-
 export class AskUIAnnotationStepReporter implements Reporter {
 
   annotationLevel? = AnnotationLevel.ON_FAILURE;

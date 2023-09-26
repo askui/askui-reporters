@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.0](https://github.com/askui/askui-reporters/compare/1.2.2...1.3.0) (2023-09-26)
+
+
+* docs: switch allure and jest-html-reporters to have allure as preferred option come first by @adi-wan-askui in https://github.com/askui/askui-reporters/pull/17
+* feat: remove private utils from public package api by @adi-wan-askui in https://github.com/askui/askui-reporters/pull/16
+* Add AnnotationReporter which restores the behaviour of AnnotationLevel by @JohannesDienst-askui in https://github.com/askui/askui-reporters/pull/18
+
 ### [1.2.2](https://github.com/askui/askui-reporters/compare/1.2.1...1.2.2) (2023-09-07)
 
 * use fork of jest-allure-circus (@askui/jest-allure-circus) to fix allure reporting

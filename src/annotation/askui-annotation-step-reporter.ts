@@ -2,7 +2,7 @@ import fs from "fs";
 import { Step, Reporter, Annotation, ReporterConfig } from "askui";
 import path from "path";
 import { JSDOM } from "jsdom";
-import { InvalidStepStatusError } from "../error/invalid-step-status-Error";
+import { InvalidStepStatusError } from "../error/invalid-step-status-error";
 import { MissingStepContentsError } from "../error/missing-step-contents-error";
 
 export enum AnnotationLevel {

@@ -1,7 +1,9 @@
 import fs from "fs";
 import { Step, Reporter, Annotation, ReporterConfig } from "askui";
 import path from "path";
-import { JSDOM } from 'jsdom';
+import { JSDOM } from "jsdom";
+import { InvalidStepStatusError } from "@/error/invalid-step-status-Error";
+import { MissingStepContentsError } from "@/error/missing-step-contents-error";
 
 export enum AnnotationLevel {
   ON_FAILURE = 'onFailure',
@@ -38,8 +40,10 @@ export class AskUIAnnotationStepReporter implements Reporter {
 
   async onStepEnd(step: Step): Promise<void> {
 
-    if (step.status === 'running' || step.status === 'pending' || step.status === 'erroneous') {
-      throw Error(`Step status must not be '{step.status}' this indicates an error in the execution.`);
+    if (step.status === 'running' || step.status === 'pending') {
+      throw new InvalidStepStatusError(
+        `Cannot report on a step with status '{step.status}'. 
+        This indicates an error in the step execution.`);
     }
 
     if (this.annotationLevel === AnnotationLevel.ON_FAILURE && step.status === 'passed') {
@@ -48,7 +52,7 @@ export class AskUIAnnotationStepReporter implements Reporter {
 
     if (step.lastRun?.end?.screenshot === undefined ||
         step.lastRun?.end?.detectedElements === undefined) {
-      throw Error("'screenshot' or 'detectedElements' not defined");
+      throw new MissingStepContentsError("'screenshot' or 'detectedElements' not defined");
     }
 
     const annotation = new Annotation(
@@ -56,7 +60,9 @@ export class AskUIAnnotationStepReporter implements Reporter {
       step.lastRun.end.detectedElements
     )
 
-    const suffix = `${step.status}${this.fileNameSuffix}`
+    const stepStatus = step.status=='passed' ? 'passed' : 'failed';
+
+    const suffix = `${stepStatus}${this.fileNameSuffix}`
     await AskUIAnnotationStepReporter.writeAnnotation(
       annotation.toHtml(),
       this.folderPath,

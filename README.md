@@ -19,9 +19,9 @@ npm install --save-dev @askui/askui-reporters
 
 Detailed examples on how to use the reporters are provided in this README.
 
-### Allure Reporter
+### AskUIAllureStepReporter
 
-> ❗️ Do **NOT** configure multiple reporters as this will break your project in unexpected ways! 
+> ❗️ Do **NOT** configure multiple step reporters in the `UiControlClient` in `jest.setup.ts` as this will break your project in unexpected ways!
 
 #### Enable Reporter in `jest.setup.ts`
 
@@ -98,9 +98,9 @@ const config: Config.InitialOptions = {
 export default config;
 ```
 
-### Jest-Html-Reporters
+### AskUIJestHtmlStepReporter
 
-> ❗️ Do **NOT** configure multiple reporters as this will break your project in unexpected ways!
+> ❗️ Do **NOT** configure multiple step reporters in the `UiControlClient` in `jest.setup.ts` as this will break your project in unexpected ways!
 
 > ❗️ **IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
 
@@ -184,6 +184,41 @@ const config: Config.InitialOptions = {
 // eslint-disable-next-line import/no-default-export
 export default config;
 ```
+
+### AskUIAnnotationStepReporter
+
+> ❗️ Do **NOT** configure multiple step reporters in the `UiControlClient` in `jest.setup.ts` as this will break your project in unexpected ways!
+
+#### Enable and Configure the AskUIAnnotationStepReporter in `jest.setup.ts`
+
+```typescript
+import { AskUIAnnotationStepReporter, AnnotationLevel } from '@askui/askui-reporters';
+...
+  aui = await UiControlClient.build({
+    ...
+    reporter: new AskUIAnnotationStepReporter(
+        // AnnotationLevel.ON_FAILURE, /* Uncomment and change to AnnotationLevel.ALL for reporting at every step */
+        // folderPath: "report", /* Uncomment and change property for different folder */
+        // fileNameSuffix: "_testStep_annotation" /* Uncomment and change property for different file name suffix */
+      ),
+  });
+...
+```
+
+`AnnotationLevel` is implemented as an enum. You have two options:
+
+* `ON_FAILURE` (Default Value): After a step failed
+* `ALL`: After every step
+
+`folderPath` is the foldername, relative to the root of your project, the report-files will be saved to.
+
+* Default value: `report`
+
+`fileNameSuffix`: The suffix for every report-file.
+
+* The generated report-filename has the following name convention:
+** `{YYYYYYMMDDTHHmmsssss}_{passed|failed}{fileNameSuffix}.html`
+** Example: 20230922072153421_failed_testStep_annotation.html
 
 ## 📝 Implement Your Own Reporter
 

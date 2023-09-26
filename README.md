@@ -210,9 +210,6 @@ import { AskUIAnnotationStepReporter, AnnotationLevel } from '@askui/askui-repor
 * `ON_FAILURE` (Default Value): After a step failed
 * `ALL`: After every step
 
-* `ON_FAILURE` (Default Value): Runs the annotate command if the step fails.
-* `ALL`: Runs the annotate command after the execution of each step.
-
 `folderPath` is the foldername, relative to the root of your project, the report-files will be saved to.
 
 * Default value: `report`

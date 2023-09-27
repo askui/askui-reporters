@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.1](https://github.com/askui/askui-reporters/compare/1.3.0...1.3.1) (2023-09-27)
+
+
+### Bug Fixes
+
+* set peer dep version constraint correctly ([3e5fc7b](https://github.com/askui/askui-reporters/commit/3e5fc7be91578716578cb8cba442e337240e62f1))
+
 ### [1.3.0](https://github.com/askui/askui-reporters/compare/1.2.2...1.3.0) (2023-09-26)
 
 

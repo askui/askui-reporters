@@ -1,6 +1,6 @@
 {
   "name": "@askui/askui-reporters",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Exports all the AskUI reporters you can use to create reports for your AskUI runs.",
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",

@@ -59,6 +59,6 @@
     "typescript": "5.1.6"
   },
   "peerDependencies": {
-    "askui": "0.12.0"
+    "askui": ">=0.11.0"
   }
 }

@@ -21,8 +21,6 @@ Detailed examples on how to use the reporters are provided in this README.
 
 ### AskUIAllureStepReporter
 
-> ❗️ Do **NOT** configure multiple step reporters in the `UiControlClient` in `jest.setup.ts` as this will break your project in unexpected ways!
-
 #### Enable Reporter in `jest.setup.ts`
 
 Add the reporter to the `UiControlClient` in `jest.setup.ts`:
@@ -99,8 +97,6 @@ export default config;
 ```
 
 ### AskUIJestHtmlStepReporter
-
-> ❗️ Do **NOT** configure multiple step reporters in the `UiControlClient` in `jest.setup.ts` as this will break your project in unexpected ways!
 
 > ❗️ **IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
 
@@ -186,8 +182,6 @@ export default config;
 ```
 
 ### AskUIAnnotationStepReporter
-
-> ❗️ Do **NOT** configure multiple step reporters in the `UiControlClient` in `jest.setup.ts` as this will break your project in unexpected ways!
 
 #### Enable and Configure the AskUIAnnotationStepReporter in `jest.setup.ts`
 

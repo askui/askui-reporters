@@ -82,6 +82,12 @@ afterEach(async () => {
 
 #### Enable the TestEnvironment `@askui/jest-allure-circus` in `jest.config.ts`
 
+Install `@askui/jest-allure-circus` environment:
+
+```bash
+npm install @askui/jest-allure-circus
+```
+
 ```typescript
 import type { Config } from "@jest/types";
 
@@ -166,6 +172,12 @@ afterEach(async () => {
 
 #### Enable the Jest-Html-Reporters in `jest.config.ts`
 
+Install `jest-html-reporters` environment:
+
+```bash
+npm install jest-html-reporters
+```
+
 ```typescript
 import type { Config } from "@jest/types";
 
@@ -213,6 +225,33 @@ import { AskUIAnnotationStepReporter, AnnotationLevel } from '@askui/askui-repor
 * The generated report-filename has the following name convention:
 ** `{YYYYYYMMDDTHHmmsssss}_{passed|failed}{fileNameSuffix}.html`
 ** Example: 20230922072153421_failed_testStep_annotation.html
+
+## Enable Multiple Reporters
+You can enable multiple reporters simultaneously by passing an array of reporters in the `reporter` property like this:
+
+```typescript
+aui = await UiControlClient.build({
+    reporter: [
+        new AskUIAnnotationStepReporter(
+          AnnotationLevel.ALL,
+          "annotation_report",
+          "_annotation"
+        ),
+        new AskUIJestHtmlStepReporter({
+          withScreenshots: 'always' as const, // See below for possible values
+          withDetectedElements: 'always' as const, // See below for possible values
+        })
+      ],
+  });
+```
+
+> ❗️ **IMPORTANT NOTE**: The `testEnvironment` setting has to be the __SAME__ for all reporters in the array! The following table shows which reporters can be enabled together.
+
+|                             | AskUIAllureStepReporter | AskUIJestHtmlStepReporter | AskUIAnnotationStepReporter |
+| --------------------------- | :---------------------: | :-----------------------: | :-------------------------: |
+| AskUIAllureStepReporter     |                         |          ❌               |               ❌             |
+| AskUIJestHtmlStepReporter   |         ❌              |                           |               ✅             |
+| AskUIAnnotationStepReporter |         ❌              |          ✅                |                             |
 
 ## 📝 Implement Your Own Reporter
 

@@ -21,9 +21,9 @@ Detailed examples on how to use the reporters are provided in this README.
 
 ### AskUIAllureStepReporter
 
-#### Enable Reporter in `jest.setup.ts`
+#### Enable Reporter in `askui-helper.ts` (former `jest.setup.ts`)
 
-Add the reporter to the `UiControlClient` in `jest.setup.ts`:
+Add the reporter to the `UiControlClient` in `askui-helper.ts` (former `jest.setup.ts`):
 
 ```typescript
 import { AskUIAllureStepReporter } from "@askui/askui-reporters";
@@ -62,9 +62,9 @@ You can pass a `ReporterConfig` object to the reporter to configure the level of
  */
 ```
 
-#### Configure `beforeEach()` and `afterEach()` in `jest.setup.ts`
+#### Configure `beforeEach()` and `afterEach()` in `askui-helper.ts` (former `jest.setup.ts`)
 
-The `UiControlClient` retrieves the videos and images from your `UiController`. You have to implement `beforeEach()` and `afterEach()` in `jest.setup.ts` to start the recording and then add it to your report:
+The `UiControlClient` retrieves the videos and images from your `UiController`. You have to implement `beforeEach()` and `afterEach()` in `askui-helper.ts` (former `jest.setup.ts`) to start the recording and then add it to your report:
 
 1. Allure Reporter
 
@@ -93,7 +93,7 @@ import type { Config } from "@jest/types";
 
 const config: Config.InitialOptions = {
   preset: "ts-jest",
-  setupFilesAfterEnv: ["./helper/jest.setup.ts"],
+  setupFilesAfterEnv: ["./helper/askui-helper.ts"], // former `./helper/jest.setup.ts`
   sandboxInjectedGlobals: ["Math"],
   testEnvironment: "@askui/jest-allure-circus",
 };
@@ -104,16 +104,16 @@ export default config;
 
 ### AskUIJestHtmlStepReporter
 
-> ❗️ **IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `jest.setup.ts`. For video do not configure a `reporter` in your `UiControlClient`.
+> ❗️ **IMPORTANT NOTE**: Due to restrictions of `jest-html-reporters` you can either have screenshots or video with this reporter but not both at the same time. For screenshots omit the `beforeEach()` and `afterEach()` hooks in `askui-helper.ts` (former `jest.setup.ts`). For video do not configure a `reporter` in your `UiControlClient`.
 
 #### Install `ffmpeg` On Your System
 To use this reporter you have to have [ffmpeg](http://www.ffmpeg.org/) installed on your system (including all necessary encoding libraries like `libmp3lame` or `libx264`).
 
 Please follow the [installation instructions](http://www.ffmpeg.org/download.html) for your system.
 
-#### Enable Reporter in `jest.setup.ts`
+#### Enable Reporter in `askui-helper.ts` (former `jest.setup.ts`)
 
-Add the reporter to the `UiControlClient` in `jest.setup.ts`:
+Add the reporter to the `UiControlClient` in `askui-helper.ts` (former `jest.setup.ts`):
 
 ```typescript
 // Do not forget this import at the start of the file!
@@ -153,7 +153,7 @@ You can pass a `ReporterConfig` object to the reporter to configure the level of
  */
 ```
 
-#### Configure `beforeEach()` and `afterEach()` in `jest.setup.ts`
+#### Configure `beforeEach()` and `afterEach()` in `askui-helper.ts` (former `jest.setup.ts`)
 
 ```typescript
 import path from "path";
@@ -184,7 +184,7 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
   preset: "ts-jest",
   testEnvironment: "node",
-  setupFilesAfterEnv: ["./helper/jest.setup.ts"],
+  setupFilesAfterEnv: ["./helper/askui-helper.ts"], // former `./helper/jest.setup.ts`
   sandboxInjectedGlobals: ["Math"],
   reporters: ["default", "jest-html-reporters"],
 };
@@ -197,8 +197,8 @@ export default config;
 
 > ❗️ **IMPORTANT NOTE**: Due to restrictions this reporter only works when you run your workflows in serial (default for AskUI)!
 
-#### Enable and Configure the AskUIXRayStepReporter in `jest.setup.ts`
-You have to do a few things in your `jest.setup.ts` to enable the `AskUIXRayStepReporter`:
+#### Enable and Configure the AskUIXRayStepReporter in `askui-helper.ts` (former `jest.setup.ts`)
+You have to do a few things in your `askui-helper.ts` (former `jest.setup.ts`) to enable the `AskUIXRayStepReporter`:
 
 1. Import the reporter
 2. Initialize the reporter outside the `beforeAll()` hook
@@ -275,7 +275,7 @@ export default config;
 
 ### AskUIAnnotationStepReporter
 
-#### Enable and Configure the AskUIAnnotationStepReporter in `jest.setup.ts`
+#### Enable and Configure the AskUIAnnotationStepReporter in `askui-helper.ts` (former `jest.setup.ts`)
 
 ## Enable Multiple Reporters
 You can enable multiple reporters simultaneously by passing an array of reporters in the `reporter` property like this:

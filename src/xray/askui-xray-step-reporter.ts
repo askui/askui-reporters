@@ -26,7 +26,7 @@ type XRayEvidence = {
   contentType: string;
 }
 
-interface XRayStep {
+type XRayStep = {
   status?: Status;
   actualResult?: string;
   evidences: XRayEvidence[];

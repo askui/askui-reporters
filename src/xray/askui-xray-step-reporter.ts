@@ -1,15 +1,15 @@
-import { Reporter, Step, StepStatus, ReporterConfig } from "askui";
-import { convertPngDataUrlToBase64 } from "../utils/image-reporting-utils";
-import path from "path";
-import fs from "fs";
+import { Reporter, Step, StepStatus, ReporterConfig } from 'askui';
+import { convertPngDataUrlToBase64 } from '../utils/image-reporting-utils';
+import path from 'path';
+import fs from 'fs';
 
 /*
  * Possible XRay status: PASS, FAIL, TODO
  */
 enum Status {
-  PASS = "PASS",
-  FAIL = "FAIL",
-  TODO = "TODO",
+  PASS = 'PASS',
+  FAIL = 'FAIL',
+  TODO = 'TODO',
 }
 
 type XRayTestObject = {
@@ -34,22 +34,22 @@ interface XRayStep {
 
 function mapAskuiToXrayStepStatus(status: StepStatus): Status {
   switch (status) {
-    case "passed":
+    case 'passed':
       return Status.PASS;
-    case "failed":
+    case 'failed':
       return Status.FAIL;
-    case "erroneous":
+    case 'erroneous':
       return Status.FAIL;
     default:
       return Status.TODO;
   }
 }
 
-type StatusJest = "success" | "failure";
+type StatusJest = 'success' | 'failure';
 
 function mapJestToXrayStatus(status: StatusJest): Status {
   switch (status) {
-    case "success":
+    case 'success':
       return Status.PASS;
     default:
       return Status.FAIL;
@@ -61,14 +61,19 @@ export class AskUIXRayStepReporter implements Reporter {
   result: XRayTestObject[] = [];
   outputDirectory: string;
 
-  constructor(config?: ReporterConfig, outputDirectory = "xray-report") {
+  constructor(
+    config?: ReporterConfig,
+    outputDirectory = 'xray-report'
+    ) {
     if (config !== undefined) {
       this.config = config;
     }
     this.outputDirectory = outputDirectory;
   }
 
-  async createNewTestEntry(testTitle: string): Promise<void> {
+  async createNewTestEntry(
+    testTitle: string
+  ): Promise<void> {
     this.result.push(
       {
         testKey: testTitle,
@@ -78,7 +83,9 @@ export class AskUIXRayStepReporter implements Reporter {
     );
   }
 
-  async finishTestEntry(testStatus: StatusJest): Promise<void> {
+  async finishTestEntry(
+    testStatus: StatusJest
+  ): Promise<void> {
     if (this.result.length > 0) {
       const testEntry = this.result.pop();
       if (testEntry !== undefined) {
@@ -89,45 +96,53 @@ export class AskUIXRayStepReporter implements Reporter {
     }
   }
 
-  async onStepEnd(step: Step): Promise<void> {
+  private createEvidence(screenshot: string, fileName: string) {
+    return {
+        data: convertPngDataUrlToBase64(screenshot),
+        filename: fileName,
+        contentType: 'image/png'
+      };
+  }
+
+  private addSubStepToTestEntry(
+    testEntry: XRayTestObject, step: Step
+  ): XRayStep[] {
+    let steps = testEntry.steps;
+    if (steps === undefined) {
+      steps = [];
+    }
+    const subStep: XRayStep = {
+      status: mapAskuiToXrayStepStatus(step.status),
+      evidences: []
+    };
+
+    if (step.lastRun?.begin?.screenshot) {
+      subStep.evidences.push(
+        this.createEvidence(step.lastRun?.begin?.screenshot, 'before.png'));
+    }
+
+    if (step.lastRun?.end?.screenshot) {
+      subStep.evidences.push(
+        this.createEvidence(step.lastRun?.end?.screenshot, 'after.png'));
+    }
+    steps.push(subStep);
+    return steps;
+  }
+
+  async onStepEnd(
+    step: Step
+  ): Promise<void> {
     if (this.result.length > 0) {
       const testEntry = this.result.pop();
       if (testEntry !== undefined) {
-        let steps = testEntry.steps;
-        if (steps === undefined) {
-          steps = [];
-        }
-        const subStep: XRayStep = {
-          status: mapAskuiToXrayStepStatus(step.status),
-          evidences: []
-        };
-
-        function createEvidence(screenshot: string) {
-          return {
-              data: convertPngDataUrlToBase64(screenshot),
-              filename: "before.png",
-              contentType: "image/png"
-            };
-        }
-
-        if (step.lastRun?.begin?.screenshot) {
-          subStep.evidences.push(
-            createEvidence(step.lastRun?.begin?.screenshot));
-        }
-
-        if (step.lastRun?.end?.screenshot) {
-          subStep.evidences.push(
-            createEvidence(step.lastRun?.end?.screenshot));
-        }
-        steps.push(subStep);
-        testEntry.steps = steps;
+        testEntry.steps = this.addSubStepToTestEntry(testEntry, step);
         this.result.push(testEntry);
       }
     }
   }
 
   async writeReport(): Promise<void> {
-    const outputFilePath = path.join(this.outputDirectory, "report.json");
+    const outputFilePath = path.join(this.outputDirectory, 'report.json');
     if (!(fs.existsSync(this.outputDirectory))) {
       fs.mkdirSync(this.outputDirectory, { recursive: true });
     }

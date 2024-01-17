@@ -195,13 +195,15 @@ export default config;
 
 ### AskUIXRayStepReporter
 
-> ❗️ **IMPORTANT NOTE**: Due to restrictions this reporter only works when you run your workflows in serial (default for AskUI)!
+> ❗️ **IMPORTANT NOTE**: Due to restrictions this reporter only works when you run your workflows one after another (default for AskUI)!
 
 #### Enable and Configure the AskUIXRayStepReporter in `askui-helper.ts` (former `jest.setup.ts`)
 You have to do a few things in your `askui-helper.ts` (former `jest.setup.ts`) to enable the `AskUIXRayStepReporter`:
 
+> ℹ️ **NOTE**: We will try to move this into the custom `testEnvironment` we provide.
+
 1. Import the reporter
-2. Initialize the reporter outside the `beforeAll()` hook
+2. Initialize the reporter
 3. Add it to the `UiControlClient`
 4. Modify before `beforeEach()` and `afterEach()` hook to create/finish `TestEntries`
 5. Add writing the report to `afterAll()` hook
@@ -261,6 +263,8 @@ import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
+  // This uses cjs module system
+  // Replace cjs with esm if your project uses esm
   testEnvironment: '@askui/askui-reporters/dist/cjs/xray/jest-xray-environment.js',
   setupFilesAfterEnv: ['./helpers/askui-helper.ts'],
   sandboxInjectedGlobals: [

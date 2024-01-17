@@ -10,9 +10,10 @@ enum Status {
   PASS = 'PASS',
   FAIL = 'FAIL',
   TODO = 'TODO',
+  UNDEFINED = 'UNDEFINED',
 }
 
-type XRayTestObject = {
+interface XRayTestObject {
   testKey: string;
   status?: Status;
   start?: string;
@@ -20,13 +21,13 @@ type XRayTestObject = {
   steps?: XRayStep[];
 }
 
-type XRayEvidence = {
+interface XRayEvidence {
   data: string;
   filename: string;
   contentType: string;
 }
 
-type XRayStep = {
+interface XRayStep {
   status?: Status;
   actualResult?: string;
   evidences: XRayEvidence[];
@@ -40,8 +41,12 @@ function mapAskuiToXrayStepStatus(status: StepStatus): Status {
       return Status.FAIL;
     case 'erroneous':
       return Status.FAIL;
-    default:
+    case 'pending':
       return Status.TODO;
+    case 'running':
+      return Status.TODO;
+    default:
+      return Status.UNDEFINED;
   }
 }
 
@@ -51,8 +56,10 @@ function mapJestToXrayStatus(status: StatusJest): Status {
   switch (status) {
     case 'success':
       return Status.PASS;
-    default:
+    case 'failure':
       return Status.FAIL;
+    default:
+      return Status.UNDEFINED;
   }
 }
 
@@ -86,17 +93,15 @@ export class AskUIXRayStepReporter implements Reporter {
   async finishTestEntry(
     testStatus: StatusJest
   ): Promise<void> {
-    if (this.result.length > 0) {
-      const testEntry = this.result.pop();
-      if (testEntry !== undefined) {
-        testEntry.finish = new Date().toISOString();
-        testEntry.status = mapJestToXrayStatus(testStatus);
-        this.result.push(testEntry);
-      }
+    const testEntry = this.result.pop();
+    if (testEntry !== undefined) {
+      testEntry.finish = new Date().toISOString();
+      testEntry.status = mapJestToXrayStatus(testStatus);
+      this.result.push(testEntry);
     }
   }
 
-  private createEvidence(screenshot: string, fileName: string) {
+  private createEvidence(screenshot: string, fileName: string): XRayEvidence {
     return {
         data: convertPngDataUrlToBase64(screenshot),
         filename: fileName,
@@ -104,29 +109,22 @@ export class AskUIXRayStepReporter implements Reporter {
       };
   }
 
-  private addSubStepToTestEntry(
-    testEntry: XRayTestObject, step: Step
-  ): XRayStep[] {
-    let steps = testEntry.steps;
-    if (steps === undefined) {
-      steps = [];
-    }
-    const subStep: XRayStep = {
+  private buildXRayStep(
+    step: Step
+  ): XRayStep {
+    const result: XRayStep = {
       status: mapAskuiToXrayStepStatus(step.status),
       evidences: []
     };
-
     if (step.lastRun?.begin?.screenshot) {
-      subStep.evidences.push(
+      result.evidences.push(
         this.createEvidence(step.lastRun?.begin?.screenshot, 'before.png'));
     }
-
     if (step.lastRun?.end?.screenshot) {
-      subStep.evidences.push(
+      result.evidences.push(
         this.createEvidence(step.lastRun?.end?.screenshot, 'after.png'));
     }
-    steps.push(subStep);
-    return steps;
+    return result;
   }
 
   async onStepEnd(
@@ -135,7 +133,7 @@ export class AskUIXRayStepReporter implements Reporter {
     if (this.result.length > 0) {
       const testEntry = this.result.pop();
       if (testEntry !== undefined) {
-        testEntry.steps = this.addSubStepToTestEntry(testEntry, step);
+        testEntry.steps = [...(testEntry.steps ?? []), this.buildXRayStep(step)];
         this.result.push(testEntry);
       }
     }

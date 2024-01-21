@@ -1,5 +1,6 @@
 import { Reporter, Step, StepStatus, ReporterConfig } from 'askui';
 import { convertPngDataUrlToBase64 } from '../utils/image-reporting-utils';
+import { TestEntryUndefinedException } from './test-entry-undefined-exception';
 import path from 'path';
 import fs from 'fs';
 
@@ -90,15 +91,20 @@ export class AskUIXRayStepReporter implements Reporter {
     );
   }
 
+  private async last(array: Array<any>): Promise<any | undefined>  {
+    var length = array == null ? 0 : array.length;
+    return length ? array[length - 1] : undefined;
+  }
+
   async finishTestEntry(
     testStatus: StatusJest
   ): Promise<void> {
-    const testEntry = this.result.pop();
-    if (testEntry !== undefined) {
-      testEntry.finish = new Date().toISOString();
-      testEntry.status = mapJestToXrayStatus(testStatus);
-      this.result.push(testEntry);
+    const testEntry = await this.last(this.result);
+    if (testEntry === undefined) {
+      throw new TestEntryUndefinedException();
     }
+    testEntry.finish = new Date().toISOString();
+    testEntry.status = mapJestToXrayStatus(testStatus);
   }
 
   private createEvidence(screenshot: string, fileName: string): XRayEvidence {
@@ -130,13 +136,11 @@ export class AskUIXRayStepReporter implements Reporter {
   async onStepEnd(
     step: Step
   ): Promise<void> {
-    if (this.result.length > 0) {
-      const testEntry = this.result.pop();
-      if (testEntry !== undefined) {
-        testEntry.steps = [...(testEntry.steps ?? []), this.buildXRayStep(step)];
-        this.result.push(testEntry);
-      }
+    const testEntry = await this.last(this.result);
+    if (testEntry === undefined) {
+      throw new TestEntryUndefinedException();
     }
+    testEntry.steps = [...(testEntry.steps ?? []), this.buildXRayStep(step)];
   }
 
   async writeReport(): Promise<void> {

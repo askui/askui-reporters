@@ -9,8 +9,6 @@ class JestXRayEnvironment extends NodeEnvironment {
 
   async handleTestEvent(event: Event) {
 
-
-
     if (event.name === 'test_start') {
       this.global['testName'] = event.test.name
     }

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/askui/askui-reporters/compare/1.3.1...1.4.0) (2024-01-21)
+
+
+### Features
+
+* Add first version of AskUIXRayReporter ([3fdfd8a](https://github.com/askui/askui-reporters/commit/3fdfd8a7c85cc8b82f1489092ab2b7c7a95b90ce))
+* type instead of interface for XRayStep ([56cbca4](https://github.com/askui/askui-reporters/commit/56cbca491035c8915ba9d3fa110fee3faef7522d))
+
 ### [1.3.1](https://github.com/askui/askui-reporters/compare/1.3.0...1.3.1) (2023-09-27)
 
 

@@ -6,6 +6,7 @@ Collections of all reporters you can use out of the box in your AskUI runs.
 
 - [allure-reporter](https://github.com/askui/askui-example-allure-reporter)
 - [jest-html-reporters](https://github.com/askui/askui-example-jest-html-reporters)
+- [xray-step-reporter](https://github.com/askui/askui-example-xray-reporter)
 
 ## 💾 Installation
 

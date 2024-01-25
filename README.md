@@ -341,7 +341,7 @@ Commit messages should conform to [Conventional Commits Message Standard](https:
 ## 🧱 Build New Release
 
 ```
-cd reporters
+cd askui-reporters
 
 npm config set scope askui
 npm config set access public

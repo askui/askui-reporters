@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.4.1](https://github.com/askui/askui-reporters/compare/1.4.0...1.4.1) (2024-01-25)
+
+
+### Bug Fixes
+
+* Make fluent-ffmpeg and jest-html-reporters dependencies, so askui-reporters works directly after installation ([710d355](https://github.com/askui/askui-reporters/commit/710d35595d336da8b21b769d1672941f669501d8))
+
 ## [1.4.0](https://github.com/askui/askui-reporters/compare/1.3.1...1.4.0) (2024-01-21)
 
 

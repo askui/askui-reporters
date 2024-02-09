@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.4.2](https://github.com/askui/askui-reporters/compare/1.4.1...1.4.2) (2024-02-09)
+
+
+### Features
+
+* add option to AskuiAnnotationStepReporter to write screenshots ([b3d7c4c](https://github.com/askui/askui-reporters/commit/b3d7c4c5f3c3de9216536fe4887df32bf5907534))
+
 ### [1.4.1](https://github.com/askui/askui-reporters/compare/1.4.0...1.4.1) (2024-01-25)
 
 

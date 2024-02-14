@@ -266,7 +266,7 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   // This uses cjs module system
   // Replace cjs with esm if your project uses esm
-  testEnvironment: '@askui/askui-reporters/dist/cjs/xray/jest-xray-environment.js',
+  testEnvironment: '@askui/jest-xray-environment',
   setupFilesAfterEnv: ['./helpers/askui-helper.ts'],
   sandboxInjectedGlobals: [
     'Math',

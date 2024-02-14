@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.0.0](https://github.com/askui/askui-reporters/compare/1.4.2...2.0.0) (2024-02-14)
+
 ### [1.4.2](https://github.com/askui/askui-reporters/compare/1.4.1...1.4.2) (2024-02-09)
 
 

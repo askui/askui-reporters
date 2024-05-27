@@ -221,9 +221,9 @@ import { AskUIXRayStepReporter } from '@askui/askui-reporters';
 let xRayReporter = new AskUIXRayStepReporter({
       withScreenshots: 'always',
     },
-    'xray-report', // optional: outputDirectory (default: 'xray-report')
-    false, // optional: resetReportDirectory -> deletes the outputDirectory before execution (default: false)
-    false // optional: appendToReport -> appends the results to the file 'report.json (default: false) 
+    'xray-report', // outputDirectory (default: 'xray-report')
+    false, // resetReportDirectory -> deletes the outputDirectory before execution (default: false)
+    false // appendToReport -> appends the results to the file 'report.json (default: false) 
   );
 
 beforeAll(async () => {

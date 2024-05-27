@@ -1,0 +1,585 @@
+{
+  "$id": "XraySchema",
+  "type": "object",
+  "properties": {
+    "testExecutionKey": {
+      "type": "string"
+    },
+    "info": {
+    "type": "object",
+    "properties": {
+      "project": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "string"
+      },
+      "user": {
+        "type": "string"
+      },
+      "startDate": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "finishDate": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "testPlanKey": {
+        "type": "string"
+      },
+      "testEnvironments": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": false
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+          "$ref": "#/definitions/Test"
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false,
+ 
+  "definitions": {
+ 
+    "Test": {
+      "type": "object",
+      "properties": {
+        "testKey": {
+          "type": "string"
+        },
+        "testInfo": {
+          "$ref": "#/definitions/TestInfo"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finish": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "executedBy": {
+          "type": "string"
+        },
+        "assignee": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ManualTestStepResult"
+          }
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["TODO", "FAILED", "PASSED", "EXECUTING"]
+          }
+        },
+        "results": { // DEPRECATED
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IterationResult"
+          }
+        },
+        "iterations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IterationResult"
+          }
+        },
+        "defects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvidenceItem"
+          }
+        },
+        "evidences": { // DEPRECATED
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvidenceItem"
+          }
+        },
+        "customFields": {
+          "$ref": "#/definitions/CustomField"
+        }
+      },
+      "required": ["status"],
+      "dependencies": {
+        "evidence": {
+          "not": { "required": ["evidences"] }
+        },
+        "evidences": {
+          "not": { "required": ["evidence"] }
+        },
+        "steps": {
+          "allOf": [
+            {
+              "not": { "required": ["examples"] }
+            },
+            {
+              "not": { "required": ["results"] }
+            },
+            {
+              "not": { "required": ["iterations"] }
+            }
+          ]
+        },
+        "examples": {
+          "allOf": [
+            {
+              "not": { "required": ["steps"] }
+            },
+            {
+              "not": { "required": ["results"] }
+            },
+            {
+              "not": { "required": ["iterations"] }
+            }
+          ]
+        },
+        "results": {
+          "allOf": [
+            {
+              "not": { "required": ["steps"] }
+            },
+            {
+              "not": { "required": ["examples"] }
+            },
+            {
+              "not": { "required": ["iterations"] }
+            }
+          ]
+        },
+        "iterations": {
+          "allOf": [
+            {
+              "not": { "required": ["steps"] }
+            },
+            {
+              "not": { "required": ["examples"] }
+            },
+            {
+              "not": { "required": ["results"] }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+ 
+    "IterationResult": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+          }
+        },
+        "log": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ManualTestStepResult"
+          }
+        }
+      },
+      "required": ["status"],
+      "additionalProperties": false
+    },
+ 
+    "ManualTestStepResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvidenceItem"
+          }
+        },
+        "defects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "actualResult": {
+          "type": "string"
+        }
+      },
+      "required": ["status"],
+      "additionalProperties": false
+    },
+ 
+    "TestInfo": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "projectKey": {
+          "type": "string"
+        },
+        "requirementKeys":  {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string"
+        },
+        steps: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              action: {
+                type: "string"
+              },
+              data: {
+                type: "string"
+              },
+              result: {
+                type: "string"
+              }
+            },
+            // custom fields
+            patternProperties: {
+              ".+": {}
+            },
+            required: ["action"],
+            additionalProperties: false
+          }
+        },
+        "scenario": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        }
+      },
+      "dependencies": {
+        "steps": {
+          "allOf": [
+            {
+              "not": { "required": ["scenario"] }
+            },
+            {
+              "not": { "required": ["definition"] }
+            }
+          ]
+        },
+        "scenario": {
+          "allOf": [
+            {
+              "not": { "required": ["steps"] }
+            },
+            {
+              "not": { "required": ["definition"] }
+            }
+          ]
+        },
+        "definition": {
+          "allOf": [
+            {
+              "not": { "required": ["steps"] }
+            },
+            {
+              "not": { "required": ["scenario"] }
+            }
+          ]
+        }
+      },
+      "required": ["summary", "projectKey", "type"],
+      "additionalProperties": false
+    },
+ 
+    "EvidenceItem": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
+        }
+      },
+      "required": ["data", "filename"],
+      "additionalProperties": false
+    },
+ 
+    "CustomField": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {}
+        },
+        "anyOf": [
+          {
+            "required": ["id", "value"]
+          },
+          {
+            "required": ["name", "value"]
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+ 
+}
+
+
+Examples
+Importing gherkin and other test results
+In this example, we are importing execution results for three existing test issues in Jira. The last issue DEMO-9 must be a BDD Test with a Gherkin definition because the results contain examples. The remaining issues can be of any test type.
+
+
+
+{
+    "tests" : [
+        {
+            "testKey" : "DEMO-7",
+            "start" : "2013-05-03T11:47:35+01:00",
+            "finish" : "2013-05-03T11:50:56+01:00",
+            "comment" : "Test was OK but the performance is very poor",
+            "status" : "PASSED"
+        },
+        {
+            "testKey" : "DEMO-8",
+            "start" : "2013-05-03T12:14:12+01:00",
+            "finish" : "2013-05-03T12:15:23+01:00",
+            "status" : "PASSED"
+        },
+        {
+            "testKey" : "DEMO-9",
+            "start" : "2013-05-03T12:19:23+01:00",
+            "finish" : "2013-05-03T12:20:01+01:00",
+            "comment" : "Error decreasing space shuttle speed.",
+            "status" : "FAILED",
+            "examples" : [
+                "PASSED",
+                "PASSED",
+                "PASSED",
+                "PASSED",
+                "PASSED",
+                "FAILED"
+            ]
+        }
+    ]
+}
+
+
+Importing manual test results with steps
+This is a simple example of a JSON file with execution results for a manual test.
+
+
+
+{
+    "tests" : [
+        {
+            "testKey" : "DEMO-57",
+            "start" : "2014-08-30T12:19:23+01:00",
+            "finish" : "2014-08-30T12:20:01+01:00",
+            "comment" : "Error executing step 2!",
+            "status" : "FAILED",
+            "steps": [
+                {
+                    "status": "PASSED",
+                    "actualResult": "Step 1: OK"
+                },
+                {
+                    "status": "FAILED",
+                    "actualResult": "Step 2 *Failed* with an unexpected error message",
+                    "evidences" : [
+                        {
+                            "data": "(... base 64 encoded ...)",
+                            "filename": "screenshot1.jpg",
+                            "contentType": "image/jpeg"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+Importing data-driven manual test results with auto-provisioning of tests
+This is an example of a JSON file with a single test result.
+
+This is a data-driven manual test with two iterations. For each iteration, we provide the parameters and the step results.
+
+Xray will also create or update the test in Jira with the specification contained on the "testInfo" object.
+
+
+
+{
+    "tests": [
+        {
+            "start" : "2021-08-30T11:47:35+01:00",
+            "finish" : "2021-08-30T11:50:56+01:00",
+            "comment" : "Successful execution",
+            "status" : "PASSED",
+            "evidence" : [
+                {
+                    "data": "iVBORw0KGgoAAAANSUhEUgAABkIAAAO9CAYAAADezXv6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEn(...base64 file enconding)",
+                    "filename": "image21.jpg",
+                    "contentType": "image/jpeg"
+                }
+            ],
+            "testInfo": {
+                "summary": "Strong password validation",
+                "type": "Manual",
+                "projectKey": "STORE",
+                "steps": [
+                    {
+                        "action": "Open the Change Password screen by selecting option \"My Profile > Password\"",
+                        "data": "",
+                        "result": ""
+                    },
+                    {
+                        "action": "Fill the password fields with data",
+                        "data": "Current Password: ${Password}\nNew Password: ${Password}\nConfirm New Password: ${Password}",
+                        "result": "The new password is: ${Valid}\nError:\n${Message}"
+                    }
+                ]
+            },
+            "iterations": [
+              {
+                "name": "Iteration 1",
+                "parameters": [
+                    {
+                        "name": "Password",
+                        "value": "2635ftvu23v7t!09"
+                    },
+                    {
+                        "name": "Valid",
+                        "value": "Valid"
+                    },
+                    {
+                        "name": "Message",
+                        "value": ""
+                    }
+                ],
+                "log": "Password changed successfully",
+                "status": "PASSED",
+                "steps": [
+                    {
+                        "actualResult": "",
+                        "status": "PASSED"
+                    },
+                    {
+                        "actualResult": "Password changed successfully",
+                        "status": "PASSED"
+                    }
+                ]
+              },
+              {
+                "name": "Iteration 2",
+                "parameters": [
+                    {
+                        "name": "Password",
+                        "value": "123123"
+                    },
+                    {
+                        "name": "Valid",
+                        "value": "Not Valid"
+                    },
+                    {
+                        "name": "Message",
+                        "value": "Password is too simple."
+                    }
+                ],
+                "log": "Password validation check failed. Password too simple!",
+                "status": "FAILED",
+                "steps": [
+                    {
+                        "actualResult": "",
+                        "status": "PASSED"
+                    },
+                    {
+                        "actualResult": "Password too simple!",
+                        "status": "FAILED"
+                    }
+                ]
+              }
+            ]
+        }
+    ]
+}

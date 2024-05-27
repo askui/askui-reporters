@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/askui/askui-reporters/compare/2.0.0...2.1.0) (2024-05-27)
+
+
+### Features
+
+* XRayReporter: Add flags for deleting reports directory at start and appending to report.json ([d83d375](https://github.com/askui/askui-reporters/commit/d83d3758467cb0d12277bd363b782f556ad80feb))
+
 ## [2.0.0](https://github.com/askui/askui-reporters/compare/1.4.2...2.0.0) (2024-02-14)
 
 ### [1.4.2](https://github.com/askui/askui-reporters/compare/1.4.1...1.4.2) (2024-02-09)

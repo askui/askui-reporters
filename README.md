@@ -219,8 +219,12 @@ import { AskUIXRayStepReporter } from '@askui/askui-reporters';
 
 /* 2 Initialize the reporter */
 let xRayReporter = new AskUIXRayStepReporter({
-    withScreenshots: 'always',
-  });
+      withScreenshots: 'always',
+    },
+    'xray-report', // outputDirectory (default: 'xray-report')
+    false, // resetReportDirectory -> deletes the outputDirectory before execution if set to true (default: false)
+    false // appendToReport -> appends the results to the file 'report.json if set to true. Otherwise it creates files report_<timestamp>.json (default: false) 
+  );
 
 beforeAll(async () => {
   ...
@@ -243,7 +247,7 @@ beforeEach(async () => {
 
 /* 4 Finish TestEntry with the test status */
 afterEach(async () => {
-  xRayReporter.finishTestEntry(global.testStatus);
+  xRayReporter.finishTestEntry(global.testName, global.testStatus);
 });
 
 afterAll(async () => {

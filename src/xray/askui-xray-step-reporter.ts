@@ -68,15 +68,30 @@ export class AskUIXRayStepReporter implements Reporter {
   config?: ReporterConfig;
   result: XRayTestObject[] = [];
   outputDirectory: string;
+  resetReportDirectory: boolean;
+  appendToReport: boolean;
 
   constructor(
     config?: ReporterConfig,
-    outputDirectory = 'xray-report'
+    outputDirectory = 'xray-report',
+    resetReportDirectory = false,
+    appendToReport = false
     ) {
     if (config !== undefined) {
       this.config = config;
     }
     this.outputDirectory = outputDirectory;
+    this.resetReportDirectory = resetReportDirectory;
+    if (this.resetReportDirectory === true) {
+      this.resetReportsDirectory();
+    }
+    this.appendToReport = appendToReport;
+  }
+
+  private resetReportsDirectory() {
+    if (fs.existsSync(this.outputDirectory)) {
+      fs.rmSync(this.outputDirectory, { recursive: true, force: true })
+    }
   }
 
   async createNewTestEntry(
@@ -91,15 +106,15 @@ export class AskUIXRayStepReporter implements Reporter {
     );
   }
 
-  private async last(array: Array<any>): Promise<any | undefined>  {
-    var length = array == null ? 0 : array.length;
-    return length ? array[length - 1] : undefined;
+  private async getTestEntry(testTitle: string, array: Array<any>): Promise<any | undefined>  {
+    return array.find(x => x.testKey === testTitle);
   }
 
   async finishTestEntry(
+    testTitle: string,
     testStatus: StatusJest
   ): Promise<void> {
-    const testEntry = await this.last(this.result);
+    const testEntry = await this.getTestEntry(testTitle, this.result);
     if (testEntry === undefined) {
       throw new TestEntryUndefinedException();
     }
@@ -133,6 +148,22 @@ export class AskUIXRayStepReporter implements Reporter {
     return result;
   }
 
+  private getFormatDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}${month}${day}${hours}${minutes}${seconds}`;
+  }
+
+  private async last(array: Array<any>): Promise<any | undefined>  {
+    var length = array == null ? 0 : array.length;
+    return length ? array[length - 1] : undefined;
+  }
+
   async onStepEnd(
     step: Step
   ): Promise<void> {
@@ -144,14 +175,34 @@ export class AskUIXRayStepReporter implements Reporter {
   }
 
   async writeReport(): Promise<void> {
-    const outputFilePath = path.join(this.outputDirectory, 'report.json');
-    if (!(fs.existsSync(this.outputDirectory))) {
-      fs.mkdirSync(this.outputDirectory, { recursive: true });
+    if (this.appendToReport === true) {
+      const outputFilePath = path.join(this.outputDirectory, `report.json`);
+      if (!(fs.existsSync(this.outputDirectory))) {
+        fs.mkdirSync(this.outputDirectory, { recursive: true });
+      }
+
+      let existingData: { tests: XRayTestObject[]} = { tests: []};
+      if (fs.existsSync(outputFilePath)) {
+        const fileContent = fs.readFileSync(outputFilePath, { encoding: 'utf-8' });
+        existingData = JSON.parse(fileContent);
+      }
+      existingData.tests.push(...this.result);
+
+      fs.writeFileSync(
+        outputFilePath,
+        JSON.stringify(existingData, null, 2));
     }
-    fs.writeFileSync(
-      outputFilePath,
-      JSON.stringify({
-          tests: this.result
-        }, null, 2));
+    else {
+      let timestamp = `_${this.getFormatDate()}`;
+      const outputFilePath = path.join(this.outputDirectory, `report${timestamp}.json`);
+      if (!(fs.existsSync(this.outputDirectory))) {
+        fs.mkdirSync(this.outputDirectory, { recursive: true });
+      }
+      fs.writeFileSync(
+        outputFilePath,
+        JSON.stringify({
+            tests: this.result
+          }, null, 2));
+    }
   }
 }

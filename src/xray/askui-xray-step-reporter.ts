@@ -1,6 +1,8 @@
 import { Reporter, Step, StepStatus, ReporterConfig } from 'askui';
 import { convertPngDataUrlToBase64 } from '../utils/image-reporting-utils';
 import { TestEntryUndefinedException } from './test-entry-undefined-exception';
+import { LockNotAquiredException } from './lock-not-aquired-exception';
+import { WritingXRayReportException } from './writing-xray-report-exception';
 import { lock } from 'proper-lockfile';
 import path from 'path';
 import fs from 'fs';
@@ -185,8 +187,16 @@ export class AskUIXRayStepReporter implements Reporter {
       if (!(fs.existsSync(outputFilePath))) {
         fs.writeFileSync(outputFilePath, '{"tests":[]}');
       }
-      lock(outputFilePath)
-        .then((release) => {
+
+      let release;
+      try {
+        release = await lock(outputFilePath, { retries: { retries: 5, maxTimeout: 1000 } })
+      }
+      catch {
+         throw new LockNotAquiredException();
+      }
+
+      try {
           let existingData: { tests: XRayTestObject[]} = { tests: []};
           if (fs.existsSync(outputFilePath)) {
             const fileContent = fs.readFileSync(outputFilePath, { encoding: 'utf-8' });
@@ -197,9 +207,13 @@ export class AskUIXRayStepReporter implements Reporter {
           fs.writeFileSync(
             outputFilePath,
             JSON.stringify(existingData, null, 2));
-          
-          return release();
-        });
+      }
+      catch{
+        throw new WritingXRayReportException('Error appending to report.json.')
+      }
+      finally {
+        release && release();
+      }
     }
     else {
       let timestamp = `_${this.getFormattedDate()}`;

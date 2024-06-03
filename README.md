@@ -223,7 +223,7 @@ let xRayReporter = new AskUIXRayStepReporter({
     },
     'xray-report', // outputDirectory (default: 'xray-report')
     false, // resetReportDirectory -> deletes the outputDirectory before execution if set to true (default: false)
-    false // appendToReport -> appends the results to the file 'report.json if set to true. Otherwise it creates files report_<timestamp>.json (default: false) 
+    false // appendToReport -> appends the results to the file 'report.json if set to true. Otherwise it creates files report_<timestamp>.json (default: false)
   );
 
 beforeAll(async () => {

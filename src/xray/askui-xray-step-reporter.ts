@@ -140,14 +140,27 @@ export class AskUIXRayStepReporter implements Reporter {
       status: mapAskuiToXrayStepStatus(step.status),
       evidences: []
     };
-    if (step.lastRun?.begin?.screenshot) {
-      result.evidences.push(
-        this.createEvidence(step.lastRun?.begin?.screenshot, 'before.png'));
+    // FIX: Somehow the screenshot is there even when
+    //      the config.withScreenshots setting is onFailure
+    console.log('buildXRayStep()', this.config?.withScreenshots, step.status);
+    if (this.config?.withScreenshots === 'always' || (this.config?.withScreenshots === 'onFailure' && step.status == 'failed')) {
+      if (step.lastRun?.begin?.screenshot) {
+        result.evidences.push(
+          this.createEvidence(step.lastRun?.begin?.screenshot, 'before.png'));
+      }
+      if (step.lastRun?.end?.screenshot) {
+        result.evidences.push(
+          this.createEvidence(step.lastRun?.end?.screenshot, 'after.png'));
+      }
     }
-    if (step.lastRun?.end?.screenshot) {
-      result.evidences.push(
-        this.createEvidence(step.lastRun?.end?.screenshot, 'after.png'));
+
+    if (this.config?.withScreenshots === 'begin') {
+      if (step.lastRun?.begin?.screenshot) {
+        result.evidences.push(
+          this.createEvidence(step.lastRun?.begin?.screenshot, 'before.png'));
+      }
     }
+    
     return result;
   }
 

@@ -1,5 +1,13 @@
 # Changelog
 
+### [2.1.1](https://github.com/askui/askui-reporters/compare/2.1.0...2.1.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* beforeAll()/afterAll() inside describe blocks steps seeping into XRAY-Report ([836e2b0](https://github.com/askui/askui-reporters/commit/836e2b07efe8906cdcb777adabef264281b49c2c))
+* Hotfix in AskUIXRayReporter so withScreenshots configuration is not ignored ([274f70f](https://github.com/askui/askui-reporters/commit/274f70f3845a85daa74e7ed3a0d4892ebf939f7c))
+
 ## [2.1.0](https://github.com/askui/askui-reporters/compare/2.0.0...2.1.0) (2024-05-27)
 
 

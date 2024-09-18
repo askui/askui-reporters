@@ -1,6 +1,9 @@
 import { Reporter, Step, StepStatus, ReporterConfig } from 'askui';
 import { convertPngDataUrlToBase64 } from '../utils/image-reporting-utils';
 import { TestEntryUndefinedException } from './test-entry-undefined-exception';
+import { LockNotAquiredException } from './lock-not-aquired-exception';
+import { WritingXRayReportException } from './writing-xray-report-exception';
+import { lock } from 'proper-lockfile';
 import path from 'path';
 import fs from 'fs';
 
@@ -151,7 +154,7 @@ export class AskUIXRayStepReporter implements Reporter {
     return result;
   }
 
-  private getFormatDate() {
+  private getFormattedDate() {
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -159,7 +162,8 @@ export class AskUIXRayStepReporter implements Reporter {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
-    return `${year}${month}${day}${hours}${minutes}${seconds}`;
+    const milliseconds = String(now.getMilliseconds()).padStart(2, '0');
+    return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
   }
 
   private async last(array: Array<XRayTestObject>): Promise<XRayTestObject | undefined>  {
@@ -187,20 +191,39 @@ export class AskUIXRayStepReporter implements Reporter {
       if (!(fs.existsSync(this.outputDirectory))) {
         fs.mkdirSync(this.outputDirectory, { recursive: true });
       }
-
-      let existingData: { tests: XRayTestObject[]} = { tests: []};
-      if (fs.existsSync(outputFilePath)) {
-        const fileContent = fs.readFileSync(outputFilePath, { encoding: 'utf-8' });
-        existingData = JSON.parse(fileContent);
+      if (!(fs.existsSync(outputFilePath))) {
+        fs.writeFileSync(outputFilePath, '{"tests":[]}');
       }
-      existingData.tests.push(...this.result);
 
-      fs.writeFileSync(
-        outputFilePath,
-        JSON.stringify(existingData, null, 2));
+      let release;
+      try {
+        release = await lock(outputFilePath, { retries: { retries: 5, maxTimeout: 1000 } })
+      }
+      catch {
+         throw new LockNotAquiredException();
+      }
+
+      try {
+          let existingData: { tests: XRayTestObject[]} = { tests: []};
+          if (fs.existsSync(outputFilePath)) {
+            const fileContent = fs.readFileSync(outputFilePath, { encoding: 'utf-8' });
+            existingData = JSON.parse(fileContent);
+          }
+          existingData.tests.push(...this.result);
+    
+          fs.writeFileSync(
+            outputFilePath,
+            JSON.stringify(existingData, null, 2));
+      }
+      catch{
+        throw new WritingXRayReportException('Error appending to report.json.')
+      }
+      finally {
+        release && release();
+      }
     }
     else {
-      let timestamp = `_${this.getFormatDate()}`;
+      let timestamp = `_${this.getFormattedDate()}`;
       const outputFilePath = path.join(this.outputDirectory, `report${timestamp}.json`);
       if (!(fs.existsSync(this.outputDirectory))) {
         fs.mkdirSync(this.outputDirectory, { recursive: true });

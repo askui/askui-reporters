@@ -70,6 +70,7 @@ export class AskUIXRayStepReporter implements Reporter {
   outputDirectory: string;
   resetReportDirectory: boolean;
   appendToReport: boolean;
+  isInsideStep = false;
 
   constructor(
     config?: ReporterConfig,
@@ -104,6 +105,7 @@ export class AskUIXRayStepReporter implements Reporter {
         steps: []
       }
     );
+    this.isInsideStep = true;
   }
 
   private async getTestEntry(testTitle: string, array: Array<any>): Promise<any | undefined>  {
@@ -120,6 +122,7 @@ export class AskUIXRayStepReporter implements Reporter {
     }
     testEntry.finish = new Date().toISOString();
     testEntry.status = mapJestToXrayStatus(testStatus);
+    this.isInsideStep = false;
   }
 
   private createEvidence(screenshot: string, fileName: string): XRayEvidence {
@@ -159,7 +162,7 @@ export class AskUIXRayStepReporter implements Reporter {
     return `${year}${month}${day}${hours}${minutes}${seconds}`;
   }
 
-  private async last(array: Array<any>): Promise<any | undefined>  {
+  private async last(array: Array<XRayTestObject>): Promise<XRayTestObject | undefined>  {
     var length = array == null ? 0 : array.length;
     return length ? array[length - 1] : undefined;
   }
@@ -167,11 +170,15 @@ export class AskUIXRayStepReporter implements Reporter {
   async onStepEnd(
     step: Step
   ): Promise<void> {
-    const testEntry = await this.last(this.result);
-    if (testEntry === undefined) {
-      throw new TestEntryUndefinedException();
+    if (this.isInsideStep) {
+      const testEntry = await this.last(this.result);
+      if (testEntry === undefined) {
+        throw new TestEntryUndefinedException();
+      }
+      testEntry.steps = [...(testEntry.steps ?? []), this.buildXRayStep(step)];
+      return;
     }
-    testEntry.steps = [...(testEntry.steps ?? []), this.buildXRayStep(step)];
+    console.log('Not reporting step. Running beforeAll() or afterAll() inside a describe().');
   }
 
   async writeReport(): Promise<void> {

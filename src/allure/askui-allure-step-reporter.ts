@@ -56,20 +56,38 @@ export class AskUIAllureStepReporter implements Reporter {
     const status = mapAskuiToAllureStepStatus(step.status);
     const attachments = [];
 
-    if (step.lastRun?.begin?.screenshot !== undefined) {
-      attachments.push(createScreenshotAttachment(
-        "Before Screenshot",
-        step.lastRun?.begin?.screenshot,
-        step.lastRun?.begin?.detectedElements
-      ));
+    // FIX: Somehow the screenshot is there even when
+    //      the config.withScreenshots setting is onFailure
+    if (this.config?.withScreenshots === 'always' || (
+        (this.config?.withScreenshots === 'onFailure' || this.config?.withScreenshots === undefined) &&
+          step.status === 'failed'
+        )) {
+      if (step.lastRun?.begin?.screenshot !== undefined) {
+        attachments.push(createScreenshotAttachment(
+          "Before Screenshot",
+          step.lastRun?.begin?.screenshot,
+          step.lastRun?.begin?.detectedElements
+        ));
+      }
+      if (step.lastRun?.end?.screenshot !== undefined) {
+        attachments.push(createScreenshotAttachment(
+          "After Screenshot",
+          step.lastRun?.end?.screenshot,
+          step.lastRun?.end?.detectedElements
+        ));
+      }
     }
-    if (step.lastRun?.end?.screenshot !== undefined) {
-      attachments.push(createScreenshotAttachment(
-        "After Screenshot",
-        step.lastRun?.end?.screenshot,
-        step.lastRun?.end?.detectedElements
-      ));
+
+    if (this.config?.withScreenshots === 'begin') {
+      if (step.lastRun?.begin?.screenshot !== undefined) {
+        attachments.push(createScreenshotAttachment(
+          "Before Screenshot",
+          step.lastRun?.begin?.screenshot,
+          step.lastRun?.begin?.detectedElements
+        ));
+      }
     }
+
     allure.logStep(
       step.instruction.valueHumanReadable,
       status,

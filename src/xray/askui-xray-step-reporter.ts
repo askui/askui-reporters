@@ -142,7 +142,10 @@ export class AskUIXRayStepReporter implements Reporter {
     };
     // FIX: Somehow the screenshot is there even when
     //      the config.withScreenshots setting is onFailure
-    if (this.config?.withScreenshots === 'always' || (this.config?.withScreenshots === 'onFailure' && step.status == 'failed')) {
+    if (this.config?.withScreenshots === 'always' || (
+        (this.config?.withScreenshots === 'onFailure' || this.config?.withScreenshots === undefined) &&
+        step.status === 'failed'
+      )) {
       if (step.lastRun?.begin?.screenshot) {
         result.evidences.push(
           this.createEvidence(step.lastRun?.begin?.screenshot, 'before.png'));

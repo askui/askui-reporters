@@ -1,5 +1,12 @@
 # Changelog
 
+### [2.1.2](https://github.com/askui/askui-reporters/compare/2.1.1...2.1.2) (2024-09-20)
+
+
+### Bug Fixes
+
+* Correct behaviour for setting withScreenshots in AllureReporter ([28c2fb1](https://github.com/askui/askui-reporters/commit/28c2fb1929038e5696c9f53c5f09d9ccb0ff7981))
+
 ### [2.1.1](https://github.com/askui/askui-reporters/compare/2.1.0...2.1.1) (2024-09-18)
 
 

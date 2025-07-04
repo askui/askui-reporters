@@ -94,6 +94,18 @@ export class AskUIAllureStepReporter implements Reporter {
       }
     }
 
+    let stepInfos = `Duration: ${step.duration}ms\nStatus: ${status}\nNumber of runs: ${step.runs.length}`;
+
+    if (step.error !== undefined) {
+      stepInfos += `\nError: ${step.error.message}\nStacktrace: ${step.error.stack}`;
+    }
+
+    attachments.push({
+      name: "Step Infos",
+      content: stepInfos,
+      type: AskUIContentType.TEXT,
+    });
+
     for (const attachment of attachments) {
       this.currentStep.attachment(attachment.name, attachment.content, attachment.type);
     }

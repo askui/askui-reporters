@@ -1,5 +1,5 @@
 import { Reporter, Step, StepStatus, Annotation, DetectedElement, ReporterConfig } from "askui";
-import { Status } from "@askui/jest-allure-circus";
+import { ContentType as AskUIContentType, Status, StepWrapper } from "@askui/jest-allure-circus";
 import { ContentType } from "allure-js-commons";
 import { convertPngDataUrlToBuffer } from "../utils/image-reporting-utils";
 import { convertBase64StringToBuffer } from "../utils/video-reporting-utils";
@@ -20,12 +20,11 @@ function mapAskuiToAllureStepStatus(status: StepStatus): Status {
 function createScreenshotAttachment(
   name: string,
   screenshot: string,
-  detectedElements?: Readonly<Readonly<DetectedElement>>[])
-{
+  detectedElements?: Readonly<Readonly<DetectedElement>>[]) {
   if (detectedElements === undefined) {
     return {
       name,
-      type: "image/png",
+      type: AskUIContentType.PNG,
       content: convertPngDataUrlToBuffer(screenshot),
     };
   }
@@ -35,10 +34,7 @@ function createScreenshotAttachment(
   );
   return {
     name: `${name} (annotated)`,
-    type: {
-      contentType: "text/html",
-      fileExtension: ".html",
-    },
+    type: AskUIContentType.HTML,
     content: annotation.toHtml().serialize(),
   };
 }
@@ -46,22 +42,32 @@ function createScreenshotAttachment(
 export class AskUIAllureStepReporter implements Reporter {
   config?: ReporterConfig;
 
+  private currentStep: StepWrapper | undefined;
+
   constructor(config?: ReporterConfig) {
     if (config !== undefined) {
       this.config = config;
     }
   }
 
+  async onStepBegin(step: Step): Promise<void> {
+    this.currentStep = allure.startStep(step.instruction.valueHumanReadable);
+  }
+
   async onStepEnd(step: Step): Promise<void> {
+    if (this.currentStep === undefined) {
+      return;
+    }
+
     const status = mapAskuiToAllureStepStatus(step.status);
     const attachments = [];
 
     // FIX: Somehow the screenshot is there even when
     //      the config.withScreenshots setting is onFailure
     if (this.config?.withScreenshots === 'always' || (
-        (this.config?.withScreenshots === 'onFailure' || this.config?.withScreenshots === undefined) &&
-          step.status === 'failed'
-        )) {
+      (this.config?.withScreenshots === 'onFailure' || this.config?.withScreenshots === undefined) &&
+      step.status === 'failed'
+    )) {
       if (step.lastRun?.begin?.screenshot !== undefined) {
         attachments.push(createScreenshotAttachment(
           "Before Screenshot",
@@ -88,11 +94,25 @@ export class AskUIAllureStepReporter implements Reporter {
       }
     }
 
-    allure.logStep(
-      step.instruction.valueHumanReadable,
-      status,
-      attachments,
-    );
+    let stepInfos = `Duration: ${step.duration}ms\nStatus: ${status}\nNumber of runs: ${step.runs.length}`;
+
+    if (step.error !== undefined) {
+      stepInfos += `\nError: ${step.error.message}\nStacktrace: ${step.error.stack}`;
+    }
+
+    attachments.push({
+      name: "Step Infos",
+      content: stepInfos,
+      type: AskUIContentType.TEXT,
+    });
+
+    for (const attachment of attachments) {
+      this.currentStep.attachment(attachment.name, attachment.content, attachment.type);
+    }
+
+    this.currentStep.status = status;
+    this.currentStep.endStep();
+    this.currentStep = undefined;
   }
 
   static attachVideo(webm: string) {

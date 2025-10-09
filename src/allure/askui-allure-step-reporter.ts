@@ -1,7 +1,9 @@
 import { Reporter, Step, StepStatus, Annotation, DetectedElement, ReporterConfig } from "askui";
-import { ContentType as AskUIContentType, Status, StepWrapper } from "@askui/jest-allure-circus";
-import { ContentType } from "allure-js-commons";
+import { getGlobalTestRuntime, MessageTestRuntime  }  from "allure-js-commons/sdk/runtime";
+import { getMessageAndTraceFromError  }  from "allure-js-commons/sdk";
+import { attachment as allureAttachment, ContentType, Status }  from "allure-js-commons";
 import { convertPngDataUrlToBuffer } from "../utils/image-reporting-utils";
+import { RuntimeMessage } from "node_modules/allure-js-commons/dist/types/sdk/types";
 import { convertBase64StringToBuffer } from "../utils/video-reporting-utils";
 
 function mapAskuiToAllureStepStatus(status: StepStatus): Status {
@@ -24,7 +26,7 @@ function createScreenshotAttachment(
   if (detectedElements === undefined) {
     return {
       name,
-      type: AskUIContentType.PNG,
+      type: ContentType.PNG,
       content: convertPngDataUrlToBuffer(screenshot),
     };
   }
@@ -34,7 +36,7 @@ function createScreenshotAttachment(
   );
   return {
     name: `${name} (annotated)`,
-    type: AskUIContentType.HTML,
+    type: ContentType.HTML,
     content: annotation.toHtml().serialize(),
   };
 }
@@ -42,16 +44,25 @@ function createScreenshotAttachment(
 export class AskUIAllureStepReporter implements Reporter {
   config?: ReporterConfig;
 
-  private currentStep: StepWrapper | undefined;
+  private currentStep: RuntimeMessage | undefined;
+  runtime: MessageTestRuntime;
 
   constructor(config?: ReporterConfig) {
     if (config !== undefined) {
       this.config = config;
     }
+    this.runtime = getGlobalTestRuntime() as MessageTestRuntime
   }
 
   async onStepBegin(step: Step): Promise<void> {
-    this.currentStep = allure.startStep(step.instruction.valueHumanReadable);
+    this.currentStep = {
+      type: "step_start",
+      data: {
+        name: step.instruction.valueHumanReadable,
+        start: Date.now(),
+      }
+    }
+    this.runtime.sendMessage(this.currentStep)
   }
 
   async onStepEnd(step: Step): Promise<void> {
@@ -103,23 +114,24 @@ export class AskUIAllureStepReporter implements Reporter {
     attachments.push({
       name: "Step Infos",
       content: stepInfos,
-      type: AskUIContentType.TEXT,
+      type: ContentType.TEXT,
     });
-
     for (const attachment of attachments) {
-      this.currentStep.attachment(attachment.name, attachment.content, attachment.type);
+      await allureAttachment(attachment.name, attachment.content, attachment.type)
     }
 
-    this.currentStep.status = status;
-    this.currentStep.endStep();
+    this.runtime.sendMessage({
+      type: "step_stop",
+      data: {
+        status: status,
+        stop: Date.now(),        
+        ...( step.error   ?   {statusDetails: getMessageAndTraceFromError(step.error)} : {}),
+      },
+    })
     this.currentStep = undefined;
   }
 
   static attachVideo(webm: string) {
-    allure.createAttachment(
-      "Video",
-      convertBase64StringToBuffer(webm),
-      ContentType.WEBM
-    );
+    allureAttachment("Video", convertBase64StringToBuffer(webm), ContentType.WEBM)
   }
 }

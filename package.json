@@ -39,16 +39,17 @@
     "dist/esm/"
   ],
   "dependencies": {
+    "@askui/askui-jest-xray-environment": "1.0.0",
+    "allure-jest": "^3.3.0",
+    "allure-js-commons": "^3.3.0",
     "fluent-ffmpeg": "2.1.2",
-    "jest-html-reporters": "3.1.4",
-    "@askui/askui-jest-xray-environment": "1.0.0"
+    "jest-html-reporters": "3.1.4"
   },
   "devDependencies": {
-    "@types/fluent-ffmpeg": "2.1.21",
-    "@askui/jest-allure-circus": "1.0.22",
     "@release-it-plugins/workspaces": "4.2.0",
     "@release-it/bumper": "6.0.1",
     "@release-it/conventional-changelog": "9.0.2",
+    "@types/fluent-ffmpeg": "2.1.21",
     "@types/jest": "29.5.3",
     "@types/jsdom": "21.1.1",
     "@types/node": "20.4.2",

@@ -81,12 +81,12 @@ afterEach(async () => {
 });
 ```
 
-#### Enable the TestEnvironment `@askui/jest-allure-circus` in `jest.config.ts`
+#### Enable the TestEnvironment `allure-jest/node` in `jest.config.ts`
 
-Install `@askui/jest-allure-circus` environment:
+Install `allure-jest@3.3.0` and `allure-js-commons@3.3.0` environment:
 
 ```bash
-npm install --save-dev @askui/jest-allure-circus
+npm install --save-dev allure-jest@3.3.0 allure-js-commons@3.3.0
 ```
 
 ```typescript
@@ -96,7 +96,7 @@ const config: Config.InitialOptions = {
   preset: "ts-jest",
   setupFilesAfterEnv: ["./helper/askui-helper.ts"], // former `./helper/jest.setup.ts`
   sandboxInjectedGlobals: ["Math"],
-  testEnvironment: "@askui/jest-allure-circus",
+  testEnvironment: "allure-jest/node",
 };
 
 // eslint-disable-next-line import/no-default-export

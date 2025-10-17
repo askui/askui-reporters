@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0](https://github.com/askui/askui-reporters/compare/2.1.4...2.2.0) (2025-10-17)
+
+### Features
+
+* replace @askui/jest-allure-circus with allure-jest/node ([5a05131](https://github.com/askui/askui-reporters/commit/5a05131b6d5f3e89fe0cc9ed615a1c834e7f4662))
+
 ## [2.1.4](https://github.com/askui/askui-reporters/compare/2.1.3...2.1.4) (2025-07-07)
 
 ## [2.1.3](https://github.com/askui/askui-reporters/compare/2.1.2...2.1.3) (2024-11-06)
